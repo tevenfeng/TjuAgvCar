@@ -4,6 +4,8 @@
 		<param name="serial_port" type="string" value="/dev/ttyTHS2"/>
 		<!-- set brake button -->
 		<param name="brake_button" type="int" value="7"/>
+		<!-- set start button -->
+		<param name="start_button" type="int" value="6" />
 		<!-- set input axis -->
 		<param name="axis_linear" type="int" value="1"/>
 		<param name="axis_angular" type="int" value="0"/>
