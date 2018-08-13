@@ -1,0 +1,14 @@
+<launch>
+    <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen"></node>
+
+    <!--input axis -->
+	<param name="axis_linear" value="1" type="int"/>
+	<param name="axis_angular" value="0" type="int"/>
+	<!--input vel -->
+	<!-- <param name="vel_linear" value="2" type="double"/> -->
+	<!-- <param name="vel_angular" value="2" type="double"/> -->
+
+    <node respawn="true" pkg="joy" type="joy_node" name="joystick">
+		<param name="autorepeat_rate" value="10"/>
+    </node>
+</launch>
