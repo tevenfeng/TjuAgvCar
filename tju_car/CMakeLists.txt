@@ -28,14 +28,14 @@ catkin_package(
 ###########
 
 set(SERIAL_COM "serial_com")
-set(JS_TURTLE_INCLUDE "./include/tju_car/")
+set(TJU_CAR_INCLUDE "./include/tju_car/")
 
 include_directories(include
   ${catkin_INCLUDE_DIRS}
-  ${JS_TURTLE_INCLUDE}
+  ${TJU_CAR_INCLUDE}
 )
 
-## Build the js_turtle library
+## Build the tju_car library
 add_library(${PROJECT_NAME} src/tju_car.cpp)
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
@@ -47,8 +47,8 @@ target_link_libraries(${SERIAL_COM}
   ${catkin_LIBRARIES}
 )
 
-## Declare a cpp executable
-add_executable(${PROJECT_NAME}_node src/tju_car_node.cpp)
+## Declare a cpp executable, build a node
+add_executable(${PROJECT_NAME}_node nodes/tju_car_node.cpp)
 target_link_libraries(${PROJECT_NAME}_node
   ${PROJECT_NAME}
   ${SERIAL_COM}
