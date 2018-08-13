@@ -1,14 +1,27 @@
 <launch>
-    <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen"></node>
-
-    <!--input axis -->
-	<param name="axis_linear" value="1" type="int"/>
-	<param name="axis_angular" value="0" type="int"/>
-	<!--input vel -->
-	<!-- <param name="vel_linear" value="2" type="double"/> -->
-	<!-- <param name="vel_angular" value="2" type="double"/> -->
+	<!-- car steering control with joystick or commands from jetson tx1 -->
+    <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen">
+		<param name="serial_port" type="string" value="/dev/ttyTHS2"/>
+		<!-- set brake button -->
+		<param name="brake_button" type="int" value="7"/>
+		<!-- set input axis -->
+		<param name="axis_linear" type="int" value="1"/>
+		<param name="axis_angular" type="int" value="0"/>
+		<!-- set max velocity -->
+		<param name="max_linear_vel" type="double" value="40"/>
+		<param name="max_angular_vel" type="double" value="100"/>
+	</node>
 
     <node respawn="true" pkg="joy" type="joy_node" name="joystick">
 		<param name="autorepeat_rate" value="10"/>
     </node>
+
+	<node pkg="tju_car" type="rplidar_node" name="rplidar_node">
+		<param name="serial_port"         type="string" value="/dev/rplidar"/>  
+		<param name="serial_baudrate"     type="int"    value="115200"/>
+		<param name="frame_id"            type="string" value="laser"/>
+		<param name="inverted"            type="bool"   value="false"/>
+		<param name="angle_compensate"    type="bool"   value="true"/>
+	</node>
+	<node pkg="tju_car" type="rplidar_client_node" name="rplidar_client_node"></node>
 </launch>

@@ -3,16 +3,21 @@
 
 TjuCar::TjuCar()
 {
-    // int MAX_VEL = 10;
-    // Set the max of the two velocities
-    MAX_LINEAR_VEL = 40;
-    MAX_ANGULAR_VEL = 100;
+    // Receive max linear vel and max angular vel
+	n.param<double>("max_linear_vel", MAX_LINEAR_VEL, 40);
+	n.param<double>("max_angular_vel", MAX_ANGULAR_VEL, 100);
+
+	// Receive serial port name from launch file
+	std::string serial_port;
+	n.param<std::string>("serial_port", serial_port, "/dev/ttyTHS2");
+	port = new char[serial_port.length() + 1];
+	strcpy(port, serial_port.c_str());
 
     // Receive axis_linear and axis_angular 
     // to get the vel of the specified axes
-    n.param<int>("axis_linear",axis_lin,1);
-    n.param<int>("axis_angular",axis_ang,0);
-    sub = n.subscribe<sensor_msgs::Joy>("joy",10,&TjuCar::callback,this);
+    n.param<int>("axis_linear", axis_lin, 1);
+    n.param<int>("axis_angular", axis_ang, 0);
+    sub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::callback, this);
 	
     fd = UART0_Open(fd, port);
     do {

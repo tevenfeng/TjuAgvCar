@@ -15,7 +15,7 @@ private:
 
 	int err;
 
-	char* port = "/dev/ttyTHS2";
+	char* port;
 
     void callback(const sensor_msgs::Joy::ConstPtr& Joy);
 
