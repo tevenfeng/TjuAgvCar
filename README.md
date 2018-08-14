@@ -16,9 +16,9 @@
 ### Software
 - Host side
 	- Ubuntu 16.04.04 x64
-	- Jetpack 3.2.1
+	- [Jetpack 3.2 or Jetpack 3.2.1](https://developer.nvidia.com/embedded/jetpack-3_2_1)
 - Jetson side
-	- [Nvidia L4T 28.2(Jetpack 3.2 or Jetpack 3.2.1)](https://developer.nvidia.com/embedded/jetpack-3_2_1)
+	- Nvidia L4T 28.2(included in Jetpack 3.2 or Jetpack 3.2.1)
 	- [ROS Kinetic Kame arm64](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 	- [RPLIDAR ROS Package](https://github.com/robopeak/rplidar_ros)
 	- [librealsense](https://github.com/jetsonhacks/installLibrealsenseTX1)
@@ -27,6 +27,7 @@
 	- Python 3.5.2
 	- [TensorFlow Python3 spec for Jetson TX1](https://github.com/jetsonhacks/installTensorFlowJetsonTX)
 
+- *SPECIAL THANKS to [西安邮电学院XNMS项目组](blog.csdn.net/tigerjb) for codes to control MiniBalance 4WD chassis*
 ## Building the vehicle
 
 ### TODO
