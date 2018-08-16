@@ -36,7 +36,7 @@ TjuCar::TjuCar()
     } while (FALSE == err || FALSE == fd);
 }
 
-void TjuCar::callback(const sensor_msgs::Joy::ConstPtr& Joy)
+void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
 {
     char send_buf[10]={0xff,0xfe,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
