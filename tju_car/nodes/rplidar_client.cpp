@@ -40,15 +40,15 @@
 
 #define RAD2DEG(x) ((x)*180./M_PI)
 
-void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
+void scanCallback(const sensor_msgs::LaserScan::ConstPtr& Scan)
 {
-    int count = scan->scan_time / scan->time_increment;
-    ROS_INFO("I heard a laser scan %s[%d]:", scan->header.frame_id.c_str(), count);
-    ROS_INFO("angle_range, %f, %f", RAD2DEG(scan->angle_min), RAD2DEG(scan->angle_max));
+    int count = Scan->scan_time / Scan->time_increment;
+    ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
+    ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
   
     for(int i = 0; i < count; i++) {
-        float degree = RAD2DEG(scan->angle_min + scan->angle_increment * i);
-        ROS_INFO(": [%f, %f]", degree, scan->ranges[i]);
+        float degree = RAD2DEG(Scan->angle_min + Scan->angle_increment * i);
+        ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
     }
 }
 

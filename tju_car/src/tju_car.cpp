@@ -26,8 +26,9 @@ TjuCar::TjuCar()
 	// Receive start button
 	n.param<int>("start_button", startButton, 6);
 	
-    sub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::callback, this);
-	
+    joySub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::joy_callback, this);
+	lidarSub = n.subscribe<sensor_msgs::LaserScan>("scan", 1000, &TjuCar::lidar_callback, this);
+
     fd = UART0_Open(fd, port);
     do {
         err = UART0_Init(fd, 115200, 0, 8, 1, 'N');
@@ -103,4 +104,16 @@ void TjuCar::callback(const sensor_msgs::Joy::ConstPtr& Joy)
 
 	ROS_INFO("linear:%.3lf angular:%.3lf", v.linear.x, v.angular.z);
 	ROS_INFO("buttons[7]=%d", brakeButtonValue);
+}
+
+void TjuCar::lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan)
+{
+	int count = Scan->scan_time / Scan->time_increment;
+    ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
+    ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
+	
+    for(int i = 0; i < count; i++) {
+        float degree = RAD2DEG(Scan->angle_min + Scan->angle_increment * i);
+        ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
+    }
 }
