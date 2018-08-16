@@ -27,7 +27,7 @@
 	- Python 3.5.2
 	- [TensorFlow Python3 spec for Jetson TX1](https://github.com/jetsonhacks/installTensorFlowJetsonTX)
 
-- *SPECIAL THANKS to [西安邮电学院XNMS项目组](blog.csdn.net/tigerjb) for codes to control MiniBalance 4WD chassis*
+- *SPECIAL THANKS to [西安邮电学院XNMS项目组](https://blog.csdn.net/tigerjb) for codes to control MiniBalance 4WD chassis*
 ## Building the vehicle
 
 ### TODO

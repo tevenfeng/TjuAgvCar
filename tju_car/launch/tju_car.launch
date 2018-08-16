@@ -1,6 +1,6 @@
 <launch>
 	<!-- car steering control with joystick or commands from jetson tx1 -->
-    <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen">
+    <node pkg="tju_car" type="tju_car_node" name="tju_car_node">
 		<param name="serial_port" type="string" value="/dev/ttyTHS2"/>
 		<!-- set brake button -->
 		<param name="brake_button" type="int" value="7"/>
@@ -25,5 +25,5 @@
 		<param name="inverted"            type="bool"   value="false"/>
 		<param name="angle_compensate"    type="bool"   value="true"/>
 	</node>
-	<node pkg="tju_car" type="rplidar_client_node" name="rplidar_client_node"></node>
+	<node pkg="tju_car" type="rplidar_client_node" name="rplidar_client_node" output="screen"></node>
 </launch>
