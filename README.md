@@ -1,6 +1,13 @@
-# Tju Automated Guided Vehicle
+# Tju Automated Guided Vehicle<!-- omit in toc -->
 
-&emsp;&emsp;This is the 'src' directory of the catkin workspace for the Tju Automated Guided Vehicle(TjuAgvCar).
+This is the 'src' directory of the catkin workspace for the Tju Automated Guided Vehicle(TjuAgvCar).
+
+- [Environment](#environment)
+	- [Hardware](#hardware)
+	- [Software](#software)
+- [Building the vehicle](#building-the-vehicle)
+	- [FLASHING Jetson TX1 with Jetpack 3.2 or 3.2.1](#flashing-jetson-tx1-with-jetpack-32-or-321)
+	- [](#)
 
 ## Environment
 
@@ -30,4 +37,7 @@
 - *SPECIAL THANKS to [西安邮电学院XNMS项目组](https://blog.csdn.net/tigerjb) for codes to control MiniBalance 4WD chassis*
 ## Building the vehicle
 
-### TODO
+### FLASHING Jetson TX1 with Jetpack 3.2 or 3.2.1
+In this part, what we're supposed to do is just flashing the Jetson TX1 with Jetpack 3.2 or 3.2.1 under Ubuntu 16.04. Instructions can be found [here](https://developer.download.nvidia.com/embedded/L4T/r28_Release_v2.0/GA/Docs/Jetson_TX1_and_TX2_Developer_Kits_User_Guide.pdf?pca2GDAXIzHkB_ckFujostmR_RYpt36NkYdoCFI9_ecvNhviL94o83LINGmit_IEDtLvE9pgD_l_CVjjIH8NeiMgInlOfUpk2_y-_HNk7aCKqYYQtQMLLiEk5rl3rO-xI2ifhKfHb_ntYKH_HCcZwP8wRptLOrG_0i7WbT3lUw00swhCL7T2DmUtTnle8spyzs656Fw).  
+
+### 
