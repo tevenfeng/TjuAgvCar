@@ -1,31 +1,40 @@
 <?xml version="1.0"?>
-<package format="2">
+<package>
   <name>tju_car</name>
   <version>0.1.0</version>
   <description>The tju_car package</description>
   <maintainer email="tevenfeng@tju.edu.cn">Teven Feng</maintainer>
   <author email="tevenfeng@tju.edu.cn">Teven Feng</author>
-  <license>BSD</license>
+  <license>MIT</license>
 
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>roscpp</build_depend>
-  <exec_depend>roscpp</exec_depend>
+  <run_depend>roscpp</run_depend>
 
   <build_depend>sensor_msgs</build_depend>
-  <exec_depend>sensor_msgs</exec_depend>
+  <run_depend>sensor_msgs</run_depend>
 
   <build_depend>std_msgs</build_depend>
-  <exec_depend>std_msgs</exec_depend>
+  <run_depend>std_msgs</run_depend>
 
   <build_depend>rosconsole</build_depend>
-  <exec_depend>rosconsole</exec_depend>
+  <run_depend>rosconsole</run_depend>
 
   <build_depend>std_srvs</build_depend>
-  <exec_depend>std_srvs</exec_depend>
+  <run_depend>std_srvs</run_depend>
 
+  <build_depend>ffmpeg</build_depend>
+  <run_depend>ffmpeg</run_depend>
 
+  <build_depend>camera_info_manager</build_depend>
+  <run_depend>camera_info_manager</run_depend>
+
+  <build_depend>image_transport</build_depend> 
+  <run_depend>image_transport</run_depend> 
+
+  <run_depend>v4l-utils</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -56,7 +56,6 @@ set(REALSENSE_CPP
     src/device.cpp
     src/ds-device.cpp
     src/ds-private.cpp
-    src/f200.cpp
     src/hw-monitor.cpp
     src/image.cpp
     src/ivcam-private.cpp
@@ -65,7 +64,6 @@ set(REALSENSE_CPP
     src/motion-module.cpp
     src/r200.cpp
     src/rs.cpp
-    src/sr300.cpp
     src/stream.cpp
     src/sync.cpp
     src/timestamps.cpp
@@ -75,7 +73,6 @@ set(REALSENSE_CPP
     src/uvc-wmf.cpp
     src/uvc.cpp
     src/verify.c
-    src/zr300.cpp
 )
 
 set(REALSENSE_HPP
@@ -84,20 +81,17 @@ set(REALSENSE_HPP
     src/device.h
     src/ds-device.h
     src/ds-private.h
-    src/f200.h
     src/hw-monitor.h
     src/image.h
     src/ivcam-private.h
     src/ivcam-device.h
     src/motion-module.h
     src/r200.h
-    src/sr300.h
     src/stream.h
     src/sync.h
     src/timestamps.h
     src/types.h
     src/uvc.h
-    src/zr300.h
 )
 
 if(WIN32)
@@ -180,10 +174,10 @@ if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
-option(BUILD_UNIT_TESTS "Build realsense unit tests." ON)
-if(BUILD_UNIT_TESTS)
-  add_subdirectory(unit-tests)
-endif()
+#option(BUILD_UNIT_TESTS "Build realsense unit tests." ON)
+#if(BUILD_UNIT_TESTS)
+#  add_subdirectory(unit-tests)
+#endif()
 
 # Check for unreferenced files
 FILE(GLOB_RECURSE AllSources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}

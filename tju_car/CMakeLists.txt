@@ -9,6 +9,11 @@ project(tju_car)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS roscpp std_msgs std_srvs sensor_msgs rosconsole)
 
+## pkg-config libraries
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(avcodec libavcodec REQUIRED)
+pkg_check_modules(swscale libswscale REQUIRED)
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -41,6 +46,8 @@ include_directories(include
 	${TJU_CAR_INCLUDE}
 	${RPLIDAR_SDK_PATH}/include
 	${RPLIDAR_SDK_PATH}/src
+	${avcodec_INCLUDE_DIRS}
+	${swscale_INCLUDE_DIRS}
 )
 
 ## Build the tju_car library
@@ -72,10 +79,10 @@ target_link_libraries(rplidar_node
 
 ## build rplidar_client_node to receive scanning 
 ## data from rplidar_node
-add_executable(rplidar_client_node nodes/rplidar_client.cpp)
-target_link_libraries(rplidar_client_node
-	${catkin_LIBRARIES}
-)
+#add_executable(rplidar_client_node nodes/rplidar_client.cpp)
+#target_link_libraries(rplidar_client_node
+#	${catkin_LIBRARIES}
+#)
 
 #############
 ## Install ##
@@ -83,7 +90,7 @@ target_link_libraries(rplidar_client_node
 
 ## Mark executables and/or libraries for installation
 install(
-	TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node ${SERIAL_COM} rplidar_node rplidar_client_node
+	TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node ${SERIAL_COM} rplidar_node
 	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

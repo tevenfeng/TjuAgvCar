@@ -1,6 +1,6 @@
 <launch>
 	<!-- car steering control with joystick or commands from jetson tx1 -->
-    <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen">
+    <node pkg="tju_car" type="tju_car_node" name="tju_car_node">
 		<param name="serial_port" type="string" value="/dev/ttyTHS2"/>
 		<!-- set brake button -->
 		<param name="brake_button" type="int" value="7"/>
@@ -24,5 +24,19 @@
 		<param name="frame_id"            type="string" value="laser"/>
 		<param name="inverted"            type="bool"   value="false"/>
 		<param name="angle_compensate"    type="bool"   value="true"/>
+	</node>
+
+	<node pkg="tju_car" name="usb_cam" type="usb_cam_node" output="screen">
+		<param name="video_device" value="/dev/video4" />
+		<param name="image_width" value="640" />
+		<param name="image_height" value="480" />
+		<param name="framerate" value="30" />
+		<param name="pixel_format" value="yuyv" />
+		<param name="camera_frame_id" value="usb_cam" />
+		<param name="io_method" value="mmap"/>
+	</node>
+	<node name="image_view" pkg="image_view" type="image_view" respawn="false" output="screen">
+		<remap from="image" to="/usb_cam/image_raw"/>
+		<param name="autosize" value="true" />
 	</node>
 </launch>
