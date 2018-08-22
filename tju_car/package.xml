@@ -16,6 +16,9 @@
   <build_depend>sensor_msgs</build_depend>
   <run_depend>sensor_msgs</run_depend>
 
+  <build_depend>message_generation</build_depend>
+  <run_depend>message_generation</run_depend>
+
   <build_depend>std_msgs</build_depend>
   <run_depend>std_msgs</run_depend>
 
@@ -34,10 +37,28 @@
   <build_depend>image_transport</build_depend> 
   <run_depend>image_transport</run_depend> 
 
+  <build_depend>pcl_ros</build_depend>
+  <run_depend>pcl_ros</run_depend>
+
+  <build_depend>tf</build_depend>
+  <run_depend>tf</run_depend>
+
+  <build_depend>rostest</build_depend>
+  <run_depend>rostest</run_depend>
+
+  <build_depend>nodelet</build_depend>
+  <run_depend>nodelet</run_depend>
+
+  <build_depend>cv_bridge</build_depend>
+  <run_depend>cv_bridge</run_depend>
+
+  <build_depend version_gte="0.9.2">librealsense</build_depend>
+  <run_depend>librealsense</run_depend>
+
   <run_depend>v4l-utils</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
+
   </export>
 </package>
