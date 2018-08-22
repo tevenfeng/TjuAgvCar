@@ -7,7 +7,7 @@ project(tju_car)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs std_srvs sensor_msgs rosconsole)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs std_srvs sensor_msgs rosconsole image_transport camera_info_manager)
 
 ## pkg-config libraries
 find_package(PkgConfig REQUIRED)
@@ -33,8 +33,10 @@ catkin_package(
 ###########
 
 set(SERIAL_COM "serial_com")
+set(USB_CAM "usb_cam")
 set(TJU_CAR_INCLUDE "./include/tju_car/")
 set(RPLIDAR_SDK_PATH "./rplidar_sdk/")
+set(USB_CAM_INCLUDE "./include/usb_cam/")
 FILE(GLOB RPLIDAR_SDK_SRC 
 	"${RPLIDAR_SDK_PATH}/src/arch/linux/*.cpp"
 	"${RPLIDAR_SDK_PATH}/src/hal/*.cpp"
@@ -44,6 +46,7 @@ FILE(GLOB RPLIDAR_SDK_SRC
 include_directories(include
 	${catkin_INCLUDE_DIRS}
 	${TJU_CAR_INCLUDE}
+	${USB_CAM_INCLUDE}
 	${RPLIDAR_SDK_PATH}/include
 	${RPLIDAR_SDK_PATH}/src
 	${avcodec_INCLUDE_DIRS}
@@ -84,13 +87,29 @@ target_link_libraries(rplidar_node
 #	${catkin_LIBRARIES}
 #)
 
+add_library(${PROJECT_NAME}_${USB_CAM} src/usb_cam.cpp)
+target_link_libraries(${PROJECT_NAME}_${USB_CAM}
+  ${avcodec_LIBRARIES}
+  ${swscale_LIBRARIES}
+  ${catkin_LIBRARIES}
+)
+
+## Declare a cpp executable
+add_executable(${PROJECT_NAME}_${USB_CAM}_node nodes/usb_cam_node.cpp)
+target_link_libraries(${PROJECT_NAME}_${USB_CAM}_node
+  ${PROJECT_NAME}_${USB_CAM}
+  ${avcodec_LIBRARIES}
+  ${swscale_LIBRARIES}
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############
 
 ## Mark executables and/or libraries for installation
 install(
-	TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node ${SERIAL_COM} rplidar_node
+	TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node ${SERIAL_COM} rplidar_node ${PROJECT_NAME}_${USB_CAM}_node
 	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
