@@ -28,7 +28,7 @@ private:
     void lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan);
     void usbcam_callback(const sensor_msgs::Image::ConstPtr& msg);
     // subscriber for receiving joystick information
-    ros::Subscriber joySub, lidarSub;
+    ros::Subscriber joySub, lidarSub, usbCamSub;
     // max linear velocity and max angular velocity
     double MAX_LINEAR_VEL, MAX_ANGULAR_VEL;
 
@@ -37,5 +37,7 @@ private:
     int brakeButtonValue, startButtonValue;
 
     bool isShutdown;
+
+    void convert2send(geometry_msgs::Twist v, char send_buf[]);
 };
 

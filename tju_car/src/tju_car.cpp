@@ -27,6 +27,7 @@ TjuCar::TjuCar()
 
     joySub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::joy_callback, this);
     lidarSub = n.subscribe<sensor_msgs::LaserScan>("scan", 1000, &TjuCar::lidar_callback, this);
+    usbCamSub = n.subscribe<sensor_msgs::Image>("/usb_cam/image_raw", 100, &TjuCar::usbcam_callback, this);
 
     fd = UART0_Open(fd, port);
     do {
@@ -58,6 +59,11 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
         v.angular.z = 0;
     }
 
+    convert2send(v, send_buf);
+}
+
+void TjuCar::convert2send(geometry_msgs::Twist v, char send_buf[])
+{
     // convert to 4 wheel velocity
     double v_a, v_c;
     v_a = v.linear.x - v.angular.z * 0.179f;
@@ -101,23 +107,25 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     else
         printf("send data failed!\n");
 
-    ROS_INFO("linear:%.3lf angular:%.3lf", v.linear.x, v.angular.z);
-    ROS_INFO("buttons[7]=%d", brakeButtonValue);
+//    ROS_INFO("linear:%.3lf angular:%.3lf", v.linear.x, v.angular.z);
+//    ROS_INFO("buttons[7]=%d", brakeButtonValue);
 }
 
 void TjuCar::lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan)
 {
     int count = Scan->scan_time / Scan->time_increment;
-    ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
-    ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
+//    ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
+//    ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
 
     for(int i = 0; i < count; i++) {
         float degree = RAD2DEG(Scan->angle_min + Scan->angle_increment * i);
-        ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
+//        ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
     }
 }
 
 void TjuCar::usbcam_callback(const sensor_msgs::Image::ConstPtr& msg)
 {
     ROS_INFO("height = %d, width = %d",msg->height, msg->width);
+    ROS_INFO("frame id = %d", msg->header.seq);
+    ROS_INFO("timestamp: sec = %d, nsec = %d", msg->header.stamp.sec, msg->header.stamp.nsec);
 }
