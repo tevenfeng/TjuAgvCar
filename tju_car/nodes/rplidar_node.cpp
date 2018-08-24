@@ -63,14 +63,14 @@ void publish_scan(ros::Publisher *pub,
 
     bool reversed = (angle_max > angle_min);
     if ( reversed ) {
-      scan_msg.angle_min =  M_PI - angle_max;
-      scan_msg.angle_max =  M_PI - angle_min;
+        scan_msg.angle_min =  M_PI - angle_max;
+        scan_msg.angle_max =  M_PI - angle_min;
     } else {
-      scan_msg.angle_min =  M_PI - angle_min;
-      scan_msg.angle_max =  M_PI - angle_max;
+        scan_msg.angle_min =  M_PI - angle_min;
+        scan_msg.angle_max =  M_PI - angle_max;
     }
     scan_msg.angle_increment =
-        (scan_msg.angle_max - scan_msg.angle_min) / (double)(node_count-1);
+            (scan_msg.angle_max - scan_msg.angle_min) / (double)(node_count-1);
 
     scan_msg.scan_time = scan_time;
     scan_msg.time_increment = scan_time / (double)(node_count-1);
@@ -139,7 +139,7 @@ bool checkRPLIDARHealth(RPlidarDriver * drv)
     rplidar_response_device_health_t healthinfo;
 
     op_result = drv->getHealth(healthinfo);
-    if (IS_OK(op_result)) { 
+    if (IS_OK(op_result)) {
         printf("RPLidar health status : %d\n", healthinfo.status);
         
         if (healthinfo.status == RPLIDAR_STATUS_ERROR) {
@@ -151,33 +151,33 @@ bool checkRPLIDARHealth(RPlidarDriver * drv)
         }
 
     } else {
-        fprintf(stderr, "Error, cannot retrieve rplidar health code: %x\n", 
-                        op_result);
+        fprintf(stderr, "Error, cannot retrieve rplidar health code: %x\n",
+                op_result);
         return false;
     }
 }
 
 bool stop_motor(std_srvs::Empty::Request &req,
-                               std_srvs::Empty::Response &res)
+                std_srvs::Empty::Response &res)
 {
-  if(!drv)
-       return false;
+    if(!drv)
+        return false;
 
-  ROS_DEBUG("Stop motor");
-  drv->stop();
-  drv->stopMotor();
-  return true;
+    ROS_DEBUG("Stop motor");
+    drv->stop();
+    drv->stopMotor();
+    return true;
 }
 
 bool start_motor(std_srvs::Empty::Request &req,
-                               std_srvs::Empty::Response &res)
+                 std_srvs::Empty::Response &res)
 {
-  if(!drv)
-       return false;
-  ROS_DEBUG("Start motor");
-  drv->startMotor();
-  drv->startScan();;
-  return true;
+    if(!drv)
+        return false;
+    ROS_DEBUG("Start motor");
+    drv->startMotor();
+    drv->startScan();;
+    return true;
 }
 
 int main(int argc, char * argv[]) {
@@ -192,8 +192,8 @@ int main(int argc, char * argv[]) {
     ros::NodeHandle nh;
     ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("scan", 1000);
     ros::NodeHandle nh_private("~");
-    nh_private.param<std::string>("serial_port", serial_port, "/dev/ttyUSB0"); 
-    nh_private.param<int>("serial_baudrate", serial_baudrate, 115200); 
+    nh_private.param<std::string>("serial_port", serial_port, "/dev/ttyUSB0");
+    nh_private.param<int>("serial_baudrate", serial_baudrate, 115200);
     nh_private.param<std::string>("frame_id", frame_id, "laser_frame");
     nh_private.param<bool>("inverted", inverted, false);
     nh_private.param<bool>("angle_compensate", angle_compensate, true);
@@ -214,7 +214,7 @@ int main(int argc, char * argv[]) {
     // make connection...
     if (IS_FAIL(drv->connect(serial_port.c_str(), (_u32)serial_baudrate))) {
         fprintf(stderr, "Error, cannot bind to the specified serial port %s.\n"
-            , serial_port.c_str());
+                , serial_port.c_str());
         RPlidarDriver::DisposeDriver(drv);
         return -1;
     }
@@ -272,11 +272,11 @@ int main(int argc, char * argv[]) {
                             }
                         }
                     }
-  
+
                     publish_scan(&scan_pub, angle_compensate_nodes, angle_compensate_nodes_count,
-                             start_scan_time, scan_duration, inverted,
-                             angle_min, angle_max,
-                             frame_id);
+                                 start_scan_time, scan_duration, inverted,
+                                 angle_min, angle_max,
+                                 frame_id);
                 } else {
                     int start_node = 0, end_node = 0;
                     int i = 0;
@@ -291,10 +291,10 @@ int main(int argc, char * argv[]) {
                     angle_max = DEG2RAD((float)(nodes[end_node].angle_q6_checkbit >> RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT)/64.0f);
 
                     publish_scan(&scan_pub, &nodes[start_node], end_node-start_node +1,
-                             start_scan_time, scan_duration, inverted,
-                             angle_min, angle_max,
-                             frame_id);
-               }
+                                 start_scan_time, scan_duration, inverted,
+                                 angle_min, angle_max,
+                                 frame_id);
+                }
             } else if (op_result == RESULT_OPERATION_FAIL) {
                 // All the data is invalid, just publish them
                 float angle_min = DEG2RAD(0.0f);
