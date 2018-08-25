@@ -6,6 +6,10 @@
 		<param name="brake_button" type="int" value="7"/>
 		<!-- set start button -->
 		<param name="start_button" type="int" value="6" />
+		<!-- set start recording button -->
+		<param name="start_record_button" type="int" value="1" />
+		<!-- set stop recording button -->
+		<param name="stop_record_button" type="int" value="2" />
 		<!-- set input axis -->
 		<param name="axis_linear" type="int" value="1"/>
 		<param name="axis_angular" type="int" value="0"/>

@@ -3,6 +3,9 @@
 TjuCar::TjuCar()
 {
     isShutdown = false;
+    isRecording = false;
+
+    pthread_mutex_init (&mutex,NULL);
 
     // Receive max linear vel and max angular vel
     n.param<double>("max_linear_vel", MAX_LINEAR_VEL, 40);
@@ -25,6 +28,12 @@ TjuCar::TjuCar()
     // Receive start button
     n.param<int>("start_button", startButton, 6);
 
+    // Receive start recording button
+    n.param<int>("start_recording_button", startRecordButton, 1);
+
+    // Receive stop recording button
+    n.param<int>("stop_recording_button", stopRecordButton, 2);
+
     joySub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::joy_callback, this);
     lidarSub = n.subscribe<sensor_msgs::LaserScan>("scan", 1000, &TjuCar::lidar_callback, this);
     usbCamSub = n.subscribe<sensor_msgs::Image>("/usb_cam/image_raw", 100, &TjuCar::usbcam_callback, this);
@@ -40,16 +49,32 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
 {
     char send_buf[10]={0xff,0xfe,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
+    // Determine whether we can drive the car
+    // If isShutdown==true then the car shall not move
+    // This is just for emergency stop
     brakeButtonValue = Joy->buttons[brakeButton];
     if(brakeButtonValue && !isShutdown){
         isShutdown = true;
     }
-
     startButtonValue = Joy->buttons[startButton];
     if(startButtonValue && isShutdown){
         isShutdown = false;
     }
 
+    // Determine whether we should be recording data
+    // If isRecording==true then we shall be recording all data into files
+    startRecordButtonValue = Joy->buttons[startRecordButton];
+    if(startRecordButtonValue && !isRecording){
+        isRecording = true;
+        ROS_INFO("Start Recording!");
+    }
+    stopRecordButtonValue = Joy->buttons[stopRecordButton];
+    if(stopRecordButtonValue && isRecording){
+        isRecording = false;
+        ROS_INFO("Stop Recording!");
+    }
+
+    pthread_mutex_lock(&mutex);
     geometry_msgs::Twist v;
     if(!isShutdown){
         v.linear.x =Joy->axes[axisLinear]*MAX_LINEAR_VEL;
@@ -58,7 +83,8 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
         v.linear.x = 0;
         v.angular.z = 0;
     }
-
+    current_v = v;
+    pthread_mutex_unlock(&mutex);
     convert2send(v, send_buf);
 }
 
@@ -102,30 +128,49 @@ void TjuCar::convert2send(geometry_msgs::Twist v, char send_buf[])
     send_buf[6] = ch_c;
     send_buf[9] = flag;
     int len = UART0_Send(fd, send_buf, 10);
-    if (len > 0)
-        printf("send data successful\n");
-    else
-        printf("send data failed!\n");
+    //    if (len > 0)
+    //        printf("send data successful\n");
+    //    else
+    //        printf("send data failed!\n");
 
-//    ROS_INFO("linear:%.3lf angular:%.3lf", v.linear.x, v.angular.z);
-//    ROS_INFO("buttons[7]=%d", brakeButtonValue);
+    //    ROS_INFO("linear:%.3lf angular:%.3lf", v.linear.x, v.angular.z);
+    //    ROS_INFO("buttons[7]=%d", brakeButtonValue);
 }
 
 void TjuCar::lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan)
 {
     int count = Scan->scan_time / Scan->time_increment;
-//    ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
-//    ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
+    //    ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
+    //    ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
 
     for(int i = 0; i < count; i++) {
         float degree = RAD2DEG(Scan->angle_min + Scan->angle_increment * i);
-//        ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
+        //        ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
     }
 }
 
 void TjuCar::usbcam_callback(const sensor_msgs::Image::ConstPtr& msg)
 {
-    ROS_INFO("height = %d, width = %d",msg->height, msg->width);
-    ROS_INFO("frame id = %d", msg->header.seq);
-    ROS_INFO("timestamp: sec = %d, nsec = %d", msg->header.stamp.sec, msg->header.stamp.nsec);
+    if(isRecording){
+        pthread_mutex_lock(&mutex);
+
+        std::ostringstream os;
+        os << msg->header.seq << "_";
+        os << msg->header.stamp.sec << "-" << msg->header.stamp.nsec;
+        string fileName = os.str();
+        string filePath = "/home/nvidia/AutonomousTju/data/rgb/" + fileName + ".png";
+
+        pthread_mutex_unlock(&mutex);
+        cv_bridge::CvImagePtr cv_ptr;
+        try
+        {
+            //cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+            cv::imwrite(filePath, cv_bridge::toCvShare(msg, "bgr8")->image);
+            ROS_INFO("image write!");
+        }
+        catch (cv_bridge::Exception& e)
+        {
+            ROS_ERROR("cv_bridge exception: %s", e.what());
+        }
+    }
 }

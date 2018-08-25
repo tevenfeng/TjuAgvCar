@@ -52,6 +52,9 @@
   <build_depend>cv_bridge</build_depend>
   <run_depend>cv_bridge</run_depend>
 
+  <build_depend>image_geometry</build_depend>
+  <run_depend>image_geometry</run_depend>
+
   <build_depend version_gte="0.9.2">librealsense</build_depend>
   <run_depend>librealsense</run_depend>
 

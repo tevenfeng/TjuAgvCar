@@ -1,10 +1,17 @@
+#include<sstream>
+#include<iostream>
+#include<string>
 #include<ros/ros.h>
 #include<geometry_msgs/Twist.h>
 #include<sensor_msgs/Joy.h>
 #include<sensor_msgs/LaserScan.h>
 #include<sensor_msgs/Image.h>
+#include<opencv2/imgproc/imgproc.hpp>
+#include<opencv2/highgui/highgui.hpp>
+#include<cv_bridge/cv_bridge.h>
+#include<pthread.h>
 #include"serial_com.h"
-#include<iostream>
+
 using namespace std;
 
 #define RAD2DEG(x) ((x)*180./M_PI)
@@ -15,6 +22,12 @@ public:
     TjuCar();
 
 private:
+    // mutex to avoid timestamp changed when read
+    pthread_mutex_t mutex;
+
+    // global variable to store the current velocity
+	geometry_msgs::Twist current_v;
+
     // file descriptor for opening connection to ttyTHS2
     int fd;
     // error message
@@ -32,11 +45,11 @@ private:
     // max linear velocity and max angular velocity
     double MAX_LINEAR_VEL, MAX_ANGULAR_VEL;
 
-    int axisAngular,axisLinear, brakeButton, startButton;
+    int axisAngular,axisLinear, brakeButton, startButton, startRecordButton, stopRecordButton;
 
-    int brakeButtonValue, startButtonValue;
+    int brakeButtonValue, startButtonValue, startRecordButtonValue, stopRecordButtonValue;
 
-    bool isShutdown;
+    bool isShutdown, isRecording;
 
     void convert2send(geometry_msgs::Twist v, char send_buf[]);
 };
