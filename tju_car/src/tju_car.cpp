@@ -37,6 +37,7 @@ TjuCar::TjuCar()
     joySub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::joy_callback, this);
     lidarSub = n.subscribe<sensor_msgs::LaserScan>("scan", 1000, &TjuCar::lidar_callback, this);
     usbCamSub = n.subscribe<sensor_msgs::Image>("/usb_cam/image_raw", 100, &TjuCar::usbcam_callback, this);
+    realsenseSub = n.subscribe<sensor_msgs::Image>("/camera/depth/image_raw", 100, &TjuCar::realsense_callback, this);
 
     fd = UART0_Open(fd, port);
     do {
@@ -85,6 +86,7 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     }
     current_v = v;
     pthread_mutex_unlock(&mutex);
+
     convert2send(v, send_buf);
 }
 
@@ -156,17 +158,52 @@ void TjuCar::usbcam_callback(const sensor_msgs::Image::ConstPtr& msg)
 
         std::ostringstream os;
         os << msg->header.seq << "_";
-        os << msg->header.stamp.sec << "-" << msg->header.stamp.nsec;
+        os << current_v.linear.x << "_" << current_v.angular.z << "_";
+        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec;
         string fileName = os.str();
         string filePath = "/home/nvidia/AutonomousTju/data/rgb/" + fileName + ".png";
 
         pthread_mutex_unlock(&mutex);
-        cv_bridge::CvImagePtr cv_ptr;
         try
         {
             //cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
             cv::imwrite(filePath, cv_bridge::toCvShare(msg, "bgr8")->image);
-            ROS_INFO("image write!");
+            ROS_INFO("RGB image write!");
+        }
+        catch (cv_bridge::Exception& e)
+        {
+            ROS_ERROR("cv_bridge exception: %s", e.what());
+        }
+    }
+}
+
+void TjuCar::realsense_callback(const sensor_msgs::Image::ConstPtr& msg)
+{
+    if(isRecording){
+        pthread_mutex_lock(&mutex);
+
+        std::ostringstream os;
+        os << msg->header.seq << "_";
+        os << current_v.linear.x << "_" << current_v.angular.z << "_";
+        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec;
+        string fileName = os.str();
+        string filePath = "/home/nvidia/AutonomousTju/data/depth/" + fileName + ".png";
+
+        pthread_mutex_unlock(&mutex);
+        try
+        {
+            sensor_msgs::Image img;
+            img.header = msg->header;
+            img.height = msg->height;
+            img.width = msg->width;
+            img.is_bigendian = msg->is_bigendian;
+            img.step = msg->step;
+            img.data = msg->data;
+            img.encoding = "mono16";
+
+            //cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+            cv::imwrite(filePath, cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::MONO16)->image);
+            ROS_INFO("Depth image write!");
         }
         catch (cv_bridge::Exception& e)
         {
