@@ -2,6 +2,14 @@
 
 This is the 'src' directory of the catkin workspace for the Tju Automated Guided Vehicle(TjuAgvCar).
 
+*Joystick controlling explanation*  
+- LT: Enabling motion
+- RT: Disabling motion(for emergency brake)
+- Left stick: Direction and speed controlling
+- A: Starting recording
+- B: Stopping recording
+
+
 - [Environment](#environment)
 	- [Hardware](#hardware)
 	- [Software](#software)
