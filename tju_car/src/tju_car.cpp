@@ -142,12 +142,27 @@ void TjuCar::convert2send(geometry_msgs::Twist v, char send_buf[])
 void TjuCar::lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan)
 {
     int count = Scan->scan_time / Scan->time_increment;
-    //    ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
-    //    ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
+    //ROS_INFO("I heard a laser scan %s[%d]:", Scan->header.frame_id.c_str(), count);
+    //ROS_INFO("angle_range, %f, %f", RAD2DEG(Scan->angle_min), RAD2DEG(Scan->angle_max));
 
     for(int i = 0; i < count; i++) {
         float degree = RAD2DEG(Scan->angle_min + Scan->angle_increment * i);
-        //        ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
+        //ROS_INFO(": [%f, %f]", degree, Scan->ranges[i]);
+    }
+
+    if(isRecording){
+        pthread_mutex_lock(&mutex);
+
+        // std::ostringstream os;
+        // os << msg->header.seq << "_";
+        // os << current_v.linear.x << "_" << current_v.angular.z << "_";
+        // os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec;
+        // string fileName = os.str();
+        // string filePath = "/home/nvidia/AutonomousTju/data/lidar/" + fileName + ".lidar";
+
+        pthread_mutex_unlock(&mutex);
+
+
     }
 }
 
@@ -168,7 +183,7 @@ void TjuCar::usbcam_callback(const sensor_msgs::Image::ConstPtr& msg)
         {
             //cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
             cv::imwrite(filePath, cv_bridge::toCvShare(msg, "bgr8")->image);
-            ROS_INFO("RGB image write!");
+            //ROS_INFO("RGB image write!");
         }
         catch (cv_bridge::Exception& e)
         {
@@ -203,7 +218,7 @@ void TjuCar::realsense_callback(const sensor_msgs::Image::ConstPtr& msg)
 
             //cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
             cv::imwrite(filePath, cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::MONO16)->image);
-            ROS_INFO("Depth image write!");
+            //ROS_INFO("Depth image write!");
         }
         catch (cv_bridge::Exception& e)
         {

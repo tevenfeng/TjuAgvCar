@@ -144,6 +144,5 @@
 		</include>
 	</group>
 
-	<!-- <node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car.rviz" /> -->
 
 </launch>
