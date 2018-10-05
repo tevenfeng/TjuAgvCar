@@ -34,9 +34,15 @@ TjuCar::TjuCar()
     // Receive stop recording button
     n.param<int>("stop_recording_button", stopRecordButton, 2);
 
+    // Receive start recording rosbag button
+    n.param<int>("start_rosbag_button", startRosbagButton, 0);
+
+    // Receive stop recording rosbag button
+    n.param<int>("stop_rosbag_button", stopRosbagButton, 3);
+
     joySub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::joy_callback, this);
     lidarSub = n.subscribe<sensor_msgs::LaserScan>("scan", 1000, &TjuCar::lidar_callback, this);
-    usbCamSub = n.subscribe<sensor_msgs::Image>("/usb_cam/image_raw", 100, &TjuCar::usbcam_callback, this);
+    usbCamSub = n.subscribe<sensor_msgs::Image>("/camera/rgb/image_raw", 100, &TjuCar::usbcam_callback, this);
     realsenseSub = n.subscribe<sensor_msgs::Image>("/camera/depth/image_raw", 100, &TjuCar::realsense_callback, this);
 
     fd = UART0_Open(fd, port);
@@ -73,6 +79,21 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     if(stopRecordButtonValue && isRecording){
         isRecording = false;
         ROS_INFO("Stop Recording!");
+    }
+
+    // Determine whether we should be recording rosbag
+    // If isRecordingRosbag==true then we shall be recording all data into rosbag files
+    startRosbagButtonValue = Joy->buttons[startRosbagButton];
+    if(startRosbagButtonValue && !isRecordingRosbag){
+        isRecordingRosbag = true;
+        //system("/home/nvidia/AutonomousTju/src/tju_car/scripts/record_rosbag.sh");
+        ROS_INFO("Start Recording Rosbag!");
+    }
+    stopRosbagButtonValue = Joy->buttons[stopRosbagButton];
+    if(stopRosbagButtonValue && isRecordingRosbag){
+        isRecordingRosbag = false;
+        //system("/home/nvidia/AutonomousTju/src/tju_car/scripts/record_rosbag.sh");
+        ROS_INFO("Stop Recording! Rosbag");
     }
 
     pthread_mutex_lock(&mutex);

@@ -13,6 +13,10 @@
 		<!-- set input axis -->
 		<param name="axis_linear" type="int" value="1"/>
 		<param name="axis_angular" type="int" value="0"/>
+		<!-- set start recording rosbag button -->
+		<param name="start_rosbag_button" type="int" value="0" />
+		<!-- set stop recording rosbag button -->
+		<param name="stop_rosbag_button" type="int" value="3" />
 		<!-- set max velocity -->
 		<param name="max_linear_vel" type="double" value="40"/>
 		<param name="max_angular_vel" type="double" value="100"/>
@@ -39,7 +43,6 @@
 		<param name="camera_frame_id" value="usb_cam" />
 		<param name="io_method" value="mmap"/>
 	</node>
-
 
 	<!-- Intel Realsense Camera -->
 	<arg name="camera"          default="camera" />
@@ -144,6 +147,6 @@
 		</include>
 	</group>
 
-	<!-- <node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car.rviz" /> -->
+	<node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car.rviz" />
 
 </launch>

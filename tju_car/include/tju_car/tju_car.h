@@ -46,11 +46,11 @@ private:
     // max linear velocity and max angular velocity
     double MAX_LINEAR_VEL, MAX_ANGULAR_VEL;
 
-    int axisAngular,axisLinear, brakeButton, startButton, startRecordButton, stopRecordButton;
+    int axisAngular,axisLinear, brakeButton, startButton, startRecordButton, stopRecordButton, startRosbagButton, stopRosbagButton;
 
-    int brakeButtonValue, startButtonValue, startRecordButtonValue, stopRecordButtonValue;
+    int brakeButtonValue, startButtonValue, startRecordButtonValue, stopRecordButtonValue, startRosbagButtonValue, stopRosbagButtonValue;
 
-    bool isShutdown, isRecording;
+    bool isShutdown, isRecording, isRecordingRosbag;
 
     void convert2send(geometry_msgs::Twist v, char send_buf[]);
 };
