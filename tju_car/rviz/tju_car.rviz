@@ -5,6 +5,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Image_ir1
+        - /Image_depth1
+        - /usb_cam_Image1
       Splitter Ratio: 0.5
     Tree Height: 845
   - Class: rviz/Selection

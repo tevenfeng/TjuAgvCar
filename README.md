@@ -8,6 +8,7 @@ This is the 'src' directory of the catkin workspace for the Tju Automated Guided
 - Left stick: Direction and speed controlling
 - A: Starting recording
 - B: Stopping recording
+    - There may be some delay because of large amount writing/reading of disks. But the timestamp should be 0 if recording is stopped.
 
 
 - [Environment](#environment)

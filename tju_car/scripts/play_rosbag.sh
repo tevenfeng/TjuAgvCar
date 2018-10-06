@@ -2,4 +2,4 @@
 
 cd /home/nvidia/AutonomousTju
 
-rosbag play baggy.bag
+rosbag play baggy.bag /joy:=/navigation

@@ -38,19 +38,20 @@ private:
     ros::NodeHandle n;
     // callback functions
     void joy_callback(const sensor_msgs::Joy::ConstPtr& Joy);
+	void navigation_callback(const sensor_msgs::Joy::ConstPtr& navigationJoy);
     void lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan);
     void usbcam_callback(const sensor_msgs::Image::ConstPtr& msg);
 	void realsense_callback(const sensor_msgs::Image::ConstPtr& msg);
     // subscriber for receiving joystick information
-    ros::Subscriber joySub, lidarSub, usbCamSub, realsenseSub;
+    ros::Subscriber joySub, lidarSub, usbCamSub, realsenseSub, navigationSub;
     // max linear velocity and max angular velocity
     double MAX_LINEAR_VEL, MAX_ANGULAR_VEL;
 
-    int axisAngular,axisLinear, brakeButton, startButton, startRecordButton, stopRecordButton, startRosbagButton, stopRosbagButton;
+    int axisAngular,axisLinear, brakeButton, startButton, startRecordButton, stopRecordButton, startRosbagButton, stopRosbagButton, startNavigationButton, stopNavigationButton;
 
-    int brakeButtonValue, startButtonValue, startRecordButtonValue, stopRecordButtonValue, startRosbagButtonValue, stopRosbagButtonValue;
+    int brakeButtonValue, startButtonValue, startRecordButtonValue, stopRecordButtonValue, startRosbagButtonValue, stopRosbagButtonValue, startNavigationButtonValue, stopNavigationButtonValue;
 
-    bool isShutdown, isRecording, isRecordingRosbag;
+    bool isShutdown, isRecording, isRecordingRosbag, isNavigating;
 
     void convert2send(geometry_msgs::Twist v, char send_buf[]);
 };

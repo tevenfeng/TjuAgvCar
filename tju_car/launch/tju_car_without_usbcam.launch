@@ -17,6 +17,10 @@
 		<param name="start_rosbag_button" type="int" value="0" />
 		<!-- set stop recording rosbag button -->
 		<param name="stop_rosbag_button" type="int" value="3" />
+		<!-- set stop navigation button -->
+		<param name="stop_navigation_button" type="int" value="8" />
+		<!-- set start navigation button -->
+		<param name="start_navigation_button" type="int" value="9" />
 		<!-- set max velocity -->
 		<param name="max_linear_vel" type="double" value="40"/>
 		<param name="max_angular_vel" type="double" value="100"/>

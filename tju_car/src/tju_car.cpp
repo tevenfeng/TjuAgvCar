@@ -4,6 +4,7 @@ TjuCar::TjuCar()
 {
     isShutdown = false;
     isRecording = false;
+    isNavigating = false;
 
     pthread_mutex_init (&mutex,NULL);
 
@@ -40,9 +41,16 @@ TjuCar::TjuCar()
     // Receive stop recording rosbag button
     n.param<int>("stop_rosbag_button", stopRosbagButton, 3);
 
-    joySub = n.subscribe<sensor_msgs::Joy>("joy", 10, &TjuCar::joy_callback, this);
-    lidarSub = n.subscribe<sensor_msgs::LaserScan>("scan", 1000, &TjuCar::lidar_callback, this);
-    usbCamSub = n.subscribe<sensor_msgs::Image>("/camera/rgb/image_raw", 100, &TjuCar::usbcam_callback, this);
+    // Receive stop navigation button
+    n.param<int>("stop_navigation_button", stopNavigationButton, 8);
+
+    // Receive start navigation button
+    n.param<int>("start_navigation_button", startNavigationButton, 9);
+
+    joySub = n.subscribe<sensor_msgs::Joy>("/joy", 10, &TjuCar::joy_callback, this);
+    navigationSub = n.subscribe<sensor_msgs::Joy>("/navigation", 10, &TjuCar::navigation_callback, this);
+    lidarSub = n.subscribe<sensor_msgs::LaserScan>("/scan", 1000, &TjuCar::lidar_callback, this);
+    usbCamSub = n.subscribe<sensor_msgs::Image>("/usb_cam/image_raw", 100, &TjuCar::usbcam_callback, this);
     realsenseSub = n.subscribe<sensor_msgs::Image>("/camera/depth/image_raw", 100, &TjuCar::realsense_callback, this);
 
     fd = UART0_Open(fd, port);
@@ -81,6 +89,15 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
         ROS_INFO("Stop Recording!");
     }
 
+    startNavigationButtonValue = Joy->buttons[startNavigationButton];
+    if(startNavigationButtonValue & !isNavigating){
+        isNavigating = true;
+    }
+    stopNavigationButtonValue = Joy->buttons[stopNavigationButton];
+    if(stopNavigationButtonValue & isNavigating){
+        isNavigating = false;
+    }
+
     // Determine whether we should be recording rosbag
     // If isRecordingRosbag==true then we shall be recording all data into rosbag files
     startRosbagButtonValue = Joy->buttons[startRosbagButton];
@@ -108,7 +125,26 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     current_v = v;
     pthread_mutex_unlock(&mutex);
 
-    convert2send(v, send_buf);
+    if(!isNavigating){
+        convert2send(v, send_buf);
+    }
+}
+
+void TjuCar::navigation_callback(const sensor_msgs::Joy::ConstPtr& navigationJoy){
+    char send_buf[10]={0xff,0xfe,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
+    geometry_msgs::Twist v;
+    if(!isShutdown){
+        v.linear.x = navigationJoy->axes[axisLinear]*MAX_LINEAR_VEL;
+        v.angular.z = navigationJoy->axes[axisAngular]*MAX_ANGULAR_VEL;
+    }else{
+        v.linear.x = 0;
+        v.angular.z = 0;
+    }
+
+    if(isNavigating){
+        convert2send(v, send_buf);
+    }
 }
 
 void TjuCar::convert2send(geometry_msgs::Twist v, char send_buf[])
