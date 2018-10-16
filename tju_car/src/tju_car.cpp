@@ -90,11 +90,11 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     }
 
     startNavigationButtonValue = Joy->buttons[startNavigationButton];
-    if(startNavigationButtonValue & !isNavigating){
+    if(startNavigationButtonValue && !isNavigating){
         isNavigating = true;
     }
     stopNavigationButtonValue = Joy->buttons[stopNavigationButton];
-    if(stopNavigationButtonValue & isNavigating){
+    if(stopNavigationButtonValue && isNavigating){
         isNavigating = false;
     }
 
