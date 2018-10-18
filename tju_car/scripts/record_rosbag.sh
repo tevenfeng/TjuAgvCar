@@ -2,4 +2,4 @@
 
 cd /home/nvidia/AutonomousTju
 
-rosbag record /joy -O baggy.bag
+rosbag record /joy /scan -O baggy.bag
