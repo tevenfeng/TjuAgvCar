@@ -74,13 +74,17 @@ In this part, we're going to install ROS on our Jetson TX1. With original instru
 &emsp;&emsp;&emsp;&emsp;We'd like to use OpenCV3.4 in our codes, so we have to install it first for both C++ and python3. Instructions can be found [here](https://github.com/jetsonhacks/buildOpenCVTX1).  
 &emsp;&emsp;&emsp;&emsp;Actually there may be an error that we still can not import cv2 in python3 codes under ROS, because ROS, in default, will import cv2 for python2.7(all because ROS does not support python3). So we have to remove cv2.so in python2.7's dist-packages using the following command:
 ```
-	sudo mv /opt/ros/kinetic/lib/python2.7/dist-packages/cv2.so /opt/ros/kinetic/lib/python2.7/dist-packages/cv2.so/cv2.so.bk
+	sudo mv /opt/ros/kinetic/lib/python2.7/dist-packages/cv2.so /opt/ros/kinetic/lib/python2.7/dist-packages/cv2.so.bk
 ```
 &emsp;&emsp;&emsp;&emsp;And after that, we should tell ROS to use the 'cv2.so' version of our installed opecv3.4, which is /usr/local/lib/python3.5/dist-packages/cv2.cpython-35m-aarch64-linux-gnu.so. Using the following to make a symbolic link:
 ```
 	cd /usr/local/lib/python3.5
 	sudo mkdir site-packages # if site-packages not exists
 	sudo ln -sf /usr/local/lib/python3.5/dist-packages/cv2.cpython-35m-aarch64-linux-gnu.so /usr/local/lib/python3.5/site-packages/cv2.so
+```
+&emsp;&emsp;&emsp;&emsp;Last step, add the following line to your .bashrc or .zshrc file.
+```
+	export PYTHONPATH = "/usr/local/lib/python3.5/site-packages:$PYTHONPATH"
 ```
 &emsp;&emsp;&emsp;&emsp;With all the above steps we can now import cv2 in our python3 codes.
 ### BUILDING a node with python3
