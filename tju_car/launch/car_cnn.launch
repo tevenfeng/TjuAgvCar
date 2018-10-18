@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<node pkg="tju_car" type="car_cnn_node.py" name="car_cnn_node" output="screen"></node>
+
+</launch>

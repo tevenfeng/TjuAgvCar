@@ -1,3 +1,5 @@
+<?xml version="1.0"?>
+
 <launch>
 	<!-- car steering control with joystick or commands from jetson tx1 -->
     <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen">

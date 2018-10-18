@@ -4,12 +4,12 @@ project(tju_car)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
-set(OpenCV_DIR /usr/share/OpenCV/)
+set(OpenCV_DIR /usr/local/share/OpenCV/)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs std_srvs sensor_msgs rosconsole image_transport camera_info_manager OpenCV cv_bridge image_geometry)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs std_srvs sensor_msgs rosconsole image_transport camera_info_manager OpenCV cv_bridge image_geometry)
 
 ## pkg-config libraries
 find_package(PkgConfig REQUIRED)
@@ -33,7 +33,6 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-
 set(SERIAL_COM "serial_com")
 set(USB_CAM "usb_cam")
 set(TJU_CAR_INCLUDE "./include/tju_car/")
