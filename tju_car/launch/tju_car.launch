@@ -173,6 +173,9 @@
 		<param name="laser_min_dist" value="1.0"/>
 	</node>
 
+    <node pkg="topic_tools" type="drop" name="dropRGB" args= "/usb_cam/image_raw 1 2 /usb_cam/image_raw_drop" />
+    <node pkg="topic_tools" type="drop" name="dropDepth" args= "/camera/depth/image_raw 1 2 /camera/depth/image_raw_drop" />
+
 	<node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0 0 0 0 0 0 /base_link /laser 100" />
 
 	<node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car.rviz" />

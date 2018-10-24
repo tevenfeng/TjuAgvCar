@@ -2,7 +2,7 @@
 
 <launch>
 	<!-- car steering control with joystick or commands from jetson tx1 -->
-    <node pkg="tju_car" type="tju_car_node" name="tju_car_node">
+    <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen">
 		<param name="serial_port" type="string" value="/dev/ttyTHS2"/>
 		<!-- set brake button -->
 		<param name="brake_button" type="int" value="7"/>
