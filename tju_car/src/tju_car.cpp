@@ -99,7 +99,14 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     pthread_mutex_lock(&mutex);
     geometry_msgs::Twist v;
     if(!isShutdown){
-        v.linear.x =Joy->axes[axisLinear]*MAX_LINEAR_VEL;
+        if(Joy->axes[axisLinear]>0){
+            v.linear.x = MAX_LINEAR_VEL;
+        }else if(Joy->axes[axisLinear]<0){
+            v.linear.x = -MAX_LINEAR_VEL;
+        }else{
+            v.linear.x = 0;
+        }
+        //v.linear.x =Joy->axes[axisLinear]*MAX_LINEAR_VEL;
         v.angular.z =Joy->axes[axisAngular]*MAX_ANGULAR_VEL;
     }else{
         v.linear.x = 0;
@@ -118,7 +125,14 @@ void TjuCar::navigation_callback(const sensor_msgs::Joy::ConstPtr& navigationJoy
 
     geometry_msgs::Twist v;
     if(!isShutdown){
-        v.linear.x = navigationJoy->axes[axisLinear]*MAX_LINEAR_VEL;
+        if(navigationJoy->axes[axisLinear]>0){
+            v.linear.x = MAX_LINEAR_VEL;
+        }else if(navigationJoy->axes[axisLinear]<0){
+            v.linear.x = -MAX_LINEAR_VEL;
+        }else{
+            v.linear.x = 0;
+        }
+        //v.linear.x = navigationJoy->axes[axisLinear]*MAX_LINEAR_VEL;
         v.angular.z = navigationJoy->axes[axisAngular]*MAX_ANGULAR_VEL;
     }else{
         v.linear.x = 0;
