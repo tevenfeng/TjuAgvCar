@@ -35,12 +35,6 @@ TjuCar::TjuCar()
     // Receive stop recording button
     n.param<int>("stop_recording_button", stopRecordButton, 2);
 
-    // Receive start recording rosbag button
-    n.param<int>("start_rosbag_button", startRosbagButton, 0);
-
-    // Receive stop recording rosbag button
-    n.param<int>("stop_rosbag_button", stopRosbagButton, 3);
-
     // Receive stop navigation button
     n.param<int>("stop_navigation_button", stopNavigationButton, 8);
 
@@ -70,10 +64,12 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     brakeButtonValue = Joy->buttons[brakeButton];
     if(brakeButtonValue && !isShutdown){
         isShutdown = true;
+        ROS_INFO("EMERGENCY Shutdown START!");
     }
     startButtonValue = Joy->buttons[startButton];
     if(startButtonValue && isShutdown){
         isShutdown = false;
+        ROS_INFO("EMERGENCY Shutdown END!");
     }
 
     // Determine whether we should be recording data
@@ -92,25 +88,12 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     startNavigationButtonValue = Joy->buttons[startNavigationButton];
     if(startNavigationButtonValue && !isNavigating){
         isNavigating = true;
+        ROS_INFO("Start Auto Navigation!");
     }
     stopNavigationButtonValue = Joy->buttons[stopNavigationButton];
     if(stopNavigationButtonValue && isNavigating){
         isNavigating = false;
-    }
-
-    // Determine whether we should be recording rosbag
-    // If isRecordingRosbag==true then we shall be recording all data into rosbag files
-    startRosbagButtonValue = Joy->buttons[startRosbagButton];
-    if(startRosbagButtonValue && !isRecordingRosbag){
-        isRecordingRosbag = true;
-        //system("/home/nvidia/AutonomousTju/src/tju_car/scripts/record_rosbag.sh");
-        ROS_INFO("Start Recording Rosbag!");
-    }
-    stopRosbagButtonValue = Joy->buttons[stopRosbagButton];
-    if(stopRosbagButtonValue && isRecordingRosbag){
-        isRecordingRosbag = false;
-        //system("/home/nvidia/AutonomousTju/src/tju_car/scripts/record_rosbag.sh");
-        ROS_INFO("Stop Recording! Rosbag");
+        ROS_INFO("Stop Auto Navigation!");
     }
 
     pthread_mutex_lock(&mutex);
