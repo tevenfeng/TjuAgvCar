@@ -1,10 +1,11 @@
-#!/usr/bin/python3.5
+#!/usr/bin/python3
 # coding:utf8
 
 import rospy
 import tensorflow as tf
 import numpy as np
 import cv2 as cv
+import cv_bridge
 
 
 class car_cnn_node(object):

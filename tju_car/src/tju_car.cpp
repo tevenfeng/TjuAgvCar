@@ -100,19 +100,21 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
     geometry_msgs::Twist v;
     if(!isShutdown){
         if(Joy->axes[axisLinear]>0){
-            v.linear.x = MAX_LINEAR_VEL;
+            v.linear.x = 1;
         }else if(Joy->axes[axisLinear]<0){
-            v.linear.x = -MAX_LINEAR_VEL;
+            v.linear.x = -1;
         }else{
             v.linear.x = 0;
         }
-        //v.linear.x =Joy->axes[axisLinear]*MAX_LINEAR_VEL;
-        v.angular.z =Joy->axes[axisAngular]*MAX_ANGULAR_VEL;
+        //v.linear.x =Joy->axes[axisLinear];
+        v.angular.z =Joy->axes[axisAngular];
     }else{
         v.linear.x = 0;
         v.angular.z = 0;
     }
     current_v = v;
+    v.linear.x = v.linear.x * MAX_LINEAR_VEL;
+    v.angular.z = v.angular.z * MAX_ANGULAR_VEL;
     pthread_mutex_unlock(&mutex);
 
     if(!isNavigating){
