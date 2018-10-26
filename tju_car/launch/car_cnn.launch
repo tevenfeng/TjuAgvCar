@@ -2,6 +2,11 @@
 
 <launch>
 
-	<node pkg="tju_car" type="car_cnn_node.py" name="car_cnn_node" output="screen"></node>
+	<node pkg="tju_car" type="car_cnn_node.py" name="car_cnn_node" output="screen">
+		<!-- set stop navigation button -->
+		<param name="stop_navigation_button" type="int" value="8" />
+		<!-- set start navigation button -->
+		<param name="start_navigation_button" type="int" value="9" />	
+	</node>
 
 </launch>
