@@ -20,9 +20,6 @@ from std_msgs.msg import String
 
 """
 This node restores a saved TF model that was trained on a host computer
-Note:
-1. Toggle the publishing of the twist msg with right bumper on the xbox 360 controller
-2. Steering output from the trained model is mapped from 0.0 to 1.0 where 0.0 is left, 1.0 is right and 0.5 is center
 """
 
 
