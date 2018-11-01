@@ -36,7 +36,7 @@ class runCNN(object):
         self.stopNavigationButton = rospy.get_param('stop_navigation_button', 8)
         self.bridge = CvBridge()
         self.netEnable = False
-        rospy.Subscriber("/usb_cam/image_raw", Image, self.image_callback)
+        rospy.Subscriber("/usb_cam/image_raw_drop", Image, self.image_callback)
         rospy.Subscriber("/joy", Joy, self.joy_callback)
         self.joy_pub = rospy.Publisher("/navigation", Joy, queue_size=1)
         rospy.init_node('car_cnn_node', anonymous=True)
@@ -55,6 +55,8 @@ class runCNN(object):
                                                                         self.model.keep_prob_fc2: 1.0,
                                                                         self.model.keep_prob_fc3: 1.0,
                                                                         self.model.keep_prob_fc4: 1.0})
+            if abs(steer[0][0]) < 10e-2:
+                steer[0][0] = 0
             joy.axes.append(steer[0][0])
             joy.axes.append(1.0)			
 			#joy.axes[1] = 1.0
