@@ -211,8 +211,8 @@ void TjuCar::lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan)
 
         // std::ostringstream os;
         // os << msg->header.seq << "_";
-        // os << current_v.linear.x << "_" << current_v.angular.z << "_";
-        // os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec;
+        // os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec << "_";
+        // os << current_v.linear.x << "_" << current_v.angular.z;
         // string fileName = os.str();
         // string filePath = "/home/nvidia/AutonomousTju/data/lidar/" + fileName + ".lidar";
 
@@ -228,9 +228,9 @@ void TjuCar::usbcam_callback(const sensor_msgs::Image::ConstPtr& msg)
         pthread_mutex_lock(&mutex);
 
         std::ostringstream os;
-        os << msg->header.seq << "_";
-        os << current_v.linear.x << "_" << current_v.angular.z << "_";
-        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec;
+        // os << msg->header.seq << "_";
+        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec << "_";
+        os << current_v.linear.x << "_" << current_v.angular.z;
         string fileName = os.str();
         string filePath = "/home/nvidia/AutonomousTju/data/rgb/" + fileName + ".png";
 
@@ -254,9 +254,9 @@ void TjuCar::realsense_callback(const sensor_msgs::Image::ConstPtr& msg)
         pthread_mutex_lock(&mutex);
 
         std::ostringstream os;
-        os << msg->header.seq << "_";
-        os << current_v.linear.x << "_" << current_v.angular.z << "_";
-        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec;
+        // os << msg->header.seq << "_";
+        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec << "_";
+        os << current_v.linear.x << "_" << current_v.angular.z;
         string fileName = os.str();
         string filePath = "/home/nvidia/AutonomousTju/data/depth/" + fileName + ".png";
 

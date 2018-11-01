@@ -34,7 +34,7 @@ def load_dataset(path, percent_testing=None):
         x.append(img)
 
         # filename format: seq_linear_angular_stamp.sec_stamp.nsec
-        _, linear, angular, sec, nsec = fname.split('_')
+        sec, nsec, linear, angular = fname.split('_')
         linear, angular, sec, nsec = float(linear), float(angular), int(sec), int(nsec.split('.png')[0])
         print('[linear: %f, angular: %f, sec: %d, nsec: %d]'%(linear, angular, sec, nsec))
         y.append((linear, angular))
