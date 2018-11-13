@@ -34,8 +34,10 @@ def load_dataset(path, percent_testing=None):
         x.append(img)
 
         # filename format: seq_linear_angular_stamp.sec_stamp.nsec
+        # _, linear, angular, sec, nsec = fname.split('_')
+        # linear, angular, sec, nsec = float(linear), float(angular), int(sec), int(nsec.split('.png')[0])
         sec, nsec, linear, angular = fname.split('_')
-        linear, angular, sec, nsec = float(linear), float(angular), int(sec), int(nsec.split('.png')[0])
+        sec, nsec, linear, angular = int(sec), int(nsec), float(linear), float(angular.split('.png')[0])
         print('[linear: %f, angular: %f, sec: %d, nsec: %d]'%(linear, angular, sec, nsec))
         y.append((linear, angular))
 
@@ -49,7 +51,7 @@ def load_dataset(path, percent_testing=None):
 
 
 if __name__ == '__main__':
-    path = '/home/tevenfeng/Coding/Car_CNN/data/rgb/'
+    path = '/home/tevenfeng/Coding/data/new/rgb/'
     train_x, train_y, test_x, test_y = load_dataset(path=path)
 
     num_epochs = 100
@@ -101,7 +103,7 @@ if __name__ == '__main__':
                 batch_ = [[], []]
                 for j in range(len(batch[0])):
                     batch_[0].append(batch[0][j].astype(dtype=np.float32) / 255.0)
-                    batch_[1].append(np.array([batch[1][j][0]], dtype=np.float32))
+                    batch_[1].append(np.array([batch[1][j][1]], dtype=np.float32))
                 batch = batch_
                 # print('batch =', len(batch[0]), len(batch[1]))
                 test_error_ = model.loss.eval(feed_dict={model.x: batch[0], model.y_: batch[1],
