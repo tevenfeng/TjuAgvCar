@@ -30,7 +30,7 @@ class runCNN(object):
         self.sess = tf.InteractiveSession()
         self.model = CnnModel()
         saver = tf.train.Saver()
-        saver.restore(self.sess, "/home/nvidia/AutonomousTju/data/model/model.ckpt")
+        saver.restore(self.sess, "/home/nvidia/AutonomousTju/data/models/model/model.ckpt")
         # ----------------------------
         self.startNavigationButton = rospy.get_param('start_navigation_button', 9)
         self.stopNavigationButton = rospy.get_param('stop_navigation_button', 8)
@@ -55,12 +55,8 @@ class runCNN(object):
                                                                         self.model.keep_prob_fc2: 1.0,
                                                                         self.model.keep_prob_fc3: 1.0,
                                                                         self.model.keep_prob_fc4: 1.0})
-            if abs(steer[0][0]) < 10e-2:
-                steer[0][0] = 0
             joy.axes.append(steer[0][0])
             joy.axes.append(1.0)			
-			#joy.axes[1] = 1.0
-            #joy.axes[0] = steer[0][0]
             print("steering angle = %s\n" % str(joy.axes[0]))
             self.joy_pub.publish(joy)
 

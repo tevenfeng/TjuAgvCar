@@ -98,6 +98,8 @@ void TjuCar::joy_callback(const sensor_msgs::Joy::ConstPtr& Joy)
 
     pthread_mutex_lock(&mutex);
     geometry_msgs::Twist v;
+	// For convenience we set linear speed alway to max
+	// so we only have to predict the angular speed itself
     if(!isShutdown){
         if(Joy->axes[axisLinear]>0){
             v.linear.x = 1;
@@ -126,6 +128,7 @@ void TjuCar::navigation_callback(const sensor_msgs::Joy::ConstPtr& navigationJoy
     char send_buf[10]={0xff,0xfe,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
     geometry_msgs::Twist v;
+	// Linear speed always set to max, only predict angular speed
     if(!isShutdown){
         if(navigationJoy->axes[axisLinear]>0){
             v.linear.x = MAX_LINEAR_VEL;
@@ -136,6 +139,9 @@ void TjuCar::navigation_callback(const sensor_msgs::Joy::ConstPtr& navigationJoy
         }
         //v.linear.x = navigationJoy->axes[axisLinear]*MAX_LINEAR_VEL;
         v.angular.z = navigationJoy->axes[axisAngular]*MAX_ANGULAR_VEL;
+		if (abs(v.angular.z)<10e-2){
+			v.angular.z = 0;
+		}
     }else{
         v.linear.x = 0;
         v.angular.z = 0;
