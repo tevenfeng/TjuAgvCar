@@ -44,7 +44,7 @@ TjuCar::TjuCar()
     joySub = n.subscribe<sensor_msgs::Joy>("/joy", 5, &TjuCar::joy_callback, this);
     navigationSub = n.subscribe<sensor_msgs::Joy>("/navigation", 5, &TjuCar::navigation_callback, this);
     lidarSub = n.subscribe<sensor_msgs::LaserScan>("/scan", 10, &TjuCar::lidar_callback, this);
-    usbCamSub = n.subscribe<sensor_msgs::Image>("/usb_cam/image_raw_drop", 10, &TjuCar::usbcam_callback, this);
+    usbCamSub = n.subscribe<sensor_msgs::Image>("/camera/rgb/image_raw_drop", 10, &TjuCar::usbcam_callback, this);
     realsenseSub = n.subscribe<sensor_msgs::Image>("/camera/depth/image_raw_drop", 10, &TjuCar::realsense_callback, this);
 
     fd = UART0_Open(fd, port);
