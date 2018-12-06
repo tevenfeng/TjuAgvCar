@@ -17,27 +17,24 @@ import os
 def load_dataset(path, percent_testing=None):
     assert percent_testing is None or (0.0 <= percent_testing <= 1.0)
     x, y, fnames = [], [], []
-    for i in os.walk(path):
-        d, sub_dirs, files_ = i
-        fnames.extend(files_)
+    for root, sub_dirs, files_ in os.walk(path):
+        for name in files_:
+            print(name)
+            if name == '.DS_Store':
+                continue
+            img = cv.imread(os.path.join(root, name))
+            img = cv.resize(img, (200, 150), interpolation=cv.INTER_CUBIC)
+            img = img[35:, :, :]  # ?
+            x.append(img)
 
-    seq_names = []
-    for fname in fnames:
-        seq = int(fname.split('_')[0])
-        seq_names.append((seq, fname))
-    seq_names.sort()
 
-    for (seq, fname) in seq_names:
-        img = cv.imread(path + '/' + fname)
-        img = cv.resize(img, (200, 150), interpolation=cv.INTER_CUBIC)
-        img = img[35:, :, :]  # ?
-        x.append(img)
-
-        # filename format: seq_linear_angular_stamp.sec_stamp.nsec
-        sec, nsec, linear, angular = fname.split('_')
-        linear, angular, sec, nsec = float(linear), float(angular), int(sec), int(nsec.split('.png')[0])
-        print('[linear: %f, angular: %f, sec: %d, nsec: %d]'%(linear, angular, sec, nsec))
-        y.append((linear, angular))
+            # filename format: seq_linear_angular_stamp.sec_stamp.nsec
+            # _, linear, angular, sec, nsec = fname.split('_')
+            # linear, angular, sec, nsec = float(linear), float(angular), int(sec), int(nsec.split('.png')[0])
+            sec, nsec, linear, angular = name.split('_')
+            sec, nsec, linear, angular = int(sec), int(nsec), float(linear), float(angular.split('.png')[0])
+            print('[linear: %f, angular: %f, sec: %d, nsec: %d]'%(linear, angular, sec, nsec))
+            y.append((linear, angular))
 
     train_x, train_y, test_x, test_y = [], [], [], []
     if percent_testing is not None:
@@ -49,7 +46,7 @@ def load_dataset(path, percent_testing=None):
 
 
 if __name__ == '__main__':
-    path = '/home/tevenfeng/Coding/Car_CNN/data/rgb/'
+    path = r'/Users/tevenfeng/Coding/python/backup/data/4floor/'
     train_x, train_y, test_x, test_y = load_dataset(path=path)
 
     num_epochs = 100
@@ -101,7 +98,7 @@ if __name__ == '__main__':
                 batch_ = [[], []]
                 for j in range(len(batch[0])):
                     batch_[0].append(batch[0][j].astype(dtype=np.float32) / 255.0)
-                    batch_[1].append(np.array([batch[1][j][0]], dtype=np.float32))
+                    batch_[1].append(np.array([batch[1][j][1]], dtype=np.float32))
                 batch = batch_
                 # print('batch =', len(batch[0]), len(batch[1]))
                 test_error_ = model.loss.eval(feed_dict={model.x: batch[0], model.y_: batch[1],
@@ -112,4 +109,4 @@ if __name__ == '__main__':
             test_error /= len(test_x) / batch_size
             test_accuracy = 1.0 - test_error
             print("test accuracy %g" % test_accuracy)
-    filename = saver.save(sess, r'/home/tevenfeng/Coding/Car_CNN/model/model.ckpt')
+    filename = saver.save(sess, r'/Users/tevenfeng/Coding/python/TrainCNN/model/model.ckpt')
