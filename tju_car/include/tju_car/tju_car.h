@@ -40,10 +40,11 @@ private:
     void joy_callback(const sensor_msgs::Joy::ConstPtr& Joy);
 	void navigation_callback(const sensor_msgs::Joy::ConstPtr& navigationJoy);
     void lidar_callback(const sensor_msgs::LaserScan::ConstPtr& Scan);
-    void usbcam_callback(const sensor_msgs::Image::ConstPtr& msg);
-	void realsense_callback(const sensor_msgs::Image::ConstPtr& msg);
+    void cam_callback(const sensor_msgs::Image::ConstPtr& msg);
+	void depth_callback(const sensor_msgs::Image::ConstPtr& msg);
+	void ir_callback(const sensor_msgs::Image::ConstPtr& msg);
     // subscriber for receiving joystick information
-    ros::Subscriber joySub, lidarSub, usbCamSub, realsenseSub, navigationSub;
+    ros::Subscriber joySub, lidarSub, camSub, depthSub, navigationSub, irSub;
     // max linear velocity and max angular velocity
     double MAX_LINEAR_VEL, MAX_ANGULAR_VEL;
 
