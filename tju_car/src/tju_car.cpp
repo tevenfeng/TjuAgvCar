@@ -44,9 +44,9 @@ TjuCar::TjuCar()
     joySub = n.subscribe<sensor_msgs::Joy>("/joy", 5, &TjuCar::joy_callback, this);
     navigationSub = n.subscribe<sensor_msgs::Joy>("/navigation", 5, &TjuCar::navigation_callback, this);
     //lidarSub = n.subscribe<sensor_msgs::LaserScan>("/scan", 10, &TjuCar::lidar_callback, this);
-    camSub = n.subscribe<sensor_msgs::Image>("/camera/rgb/image_raw_drop", 10, &TjuCar::cam_callback, this);
+    camSub = n.subscribe<sensor_msgs::Image>("/usb_cam/image_raw_drop", 10, &TjuCar::cam_callback, this);
     depthSub = n.subscribe<sensor_msgs::Image>("/camera/depth/image_raw_drop", 10, &TjuCar::depth_callback, this);
-    irSub = n.subscribe<sensor_msgs::Image>("/camera/ir/image_raw_drop", 10, &TjuCar::ir_callback, this);
+//    irSub = n.subscribe<sensor_msgs::Image>("/camera/ir/image_raw_drop", 10, &TjuCar::ir_callback, this);
 
     fd = UART0_Open(fd, port);
     do {
@@ -291,36 +291,36 @@ void TjuCar::depth_callback(const sensor_msgs::Image::ConstPtr& msg)
     }
 }
 
-void TjuCar::ir_callback(const sensor_msgs::Image::ConstPtr& msg){
-    if(isRecording){
-        pthread_mutex_lock(&mutex);
+//void TjuCar::ir_callback(const sensor_msgs::Image::ConstPtr& msg){
+//    if(isRecording){
+//        pthread_mutex_lock(&mutex);
 
-        std::ostringstream os;
-        // os << msg->header.seq << "_";
-        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec << "_";
-        os << current_v.linear.x << "_" << current_v.angular.z;
-        string fileName = os.str();
-        string filePath = "/home/nvidia/AutonomousTju/data/ir/" + fileName + ".png";
+//        std::ostringstream os;
+//        // os << msg->header.seq << "_";
+//        os << msg->header.stamp.sec << "_" << msg->header.stamp.nsec << "_";
+//        os << current_v.linear.x << "_" << current_v.angular.z;
+//        string fileName = os.str();
+//        string filePath = "/home/nvidia/AutonomousTju/data/ir/" + fileName + ".png";
 
-        pthread_mutex_unlock(&mutex);
-        try
-        {
-            sensor_msgs::Image img;
-            img.header = msg->header;
-            img.height = msg->height;
-            img.width = msg->width;
-            img.is_bigendian = msg->is_bigendian;
-            img.step = msg->step;
-            img.data = msg->data;
-            img.encoding = "8UC1";
+//        pthread_mutex_unlock(&mutex);
+//        try
+//        {
+//            sensor_msgs::Image img;
+//            img.header = msg->header;
+//            img.height = msg->height;
+//            img.width = msg->width;
+//            img.is_bigendian = msg->is_bigendian;
+//            img.step = msg->step;
+//            img.data = msg->data;
+//            img.encoding = "8UC1";
 
-            //cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-            cv::imwrite(filePath, cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::TYPE_8UC1)->image);
-            //ROS_INFO("Depth image write!");
-        }
-        catch (cv_bridge::Exception& e)
-        {
-            ROS_ERROR("cv_bridge exception: %s", e.what());
-        }
-    }
-}
+//            //cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+//            cv::imwrite(filePath, cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::TYPE_8UC1)->image);
+//            //ROS_INFO("Depth image write!");
+//        }
+//        catch (cv_bridge::Exception& e)
+//        {
+//            ROS_ERROR("cv_bridge exception: %s", e.what());
+//        }
+//    }
+//}
