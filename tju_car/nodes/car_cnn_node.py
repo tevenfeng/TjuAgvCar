@@ -47,7 +47,7 @@ class runCNN(object):
             joy = Joy()
             cv2image = self.bridge.imgmsg_to_cv2(pic)
             cv2image = cv2.resize(cv2image, (200, 150), interpolation=cv2.INTER_CUBIC)
-            cv2image = cv2image[35:, :, :]
+            cv2image = cv2image[:115, :, :]
             normed_img = cv2image.astype(dtype=np.float32) / 255.0
             # normed_img = np.reshape(normed_img, (115, 200, 1))
             steer = self.model.y_out.eval(session=self.sess, feed_dict={self.model.x: [normed_img],

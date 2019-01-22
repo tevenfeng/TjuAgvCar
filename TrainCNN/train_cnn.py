@@ -24,7 +24,7 @@ def load_dataset(path, percent_testing=None):
                 continue
             img = cv.imread(os.path.join(root, name))
             img = cv.resize(img, (200, 150), interpolation=cv.INTER_CUBIC)
-            img = img[35:, :, :]  # ?
+            img = img[:115, :, :]  # ?
             x.append(img)
 
 
