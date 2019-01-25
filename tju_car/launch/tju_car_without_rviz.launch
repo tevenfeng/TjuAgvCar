@@ -42,7 +42,7 @@
 	</node>
 
 	<node pkg="tju_car" name="usb_cam" type="tju_car_usb_cam_node">
-		<param name="video_device" value="/dev/video4" />
+		<param name="video_device" value="/dev/video1" />
 		<param name="image_width" value="640" />
 		<param name="image_height" value="480" />
 		<param name="framerate" value="30" />
