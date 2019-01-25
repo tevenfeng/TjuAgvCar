@@ -36,7 +36,7 @@ class runCNN(object):
         self.stopNavigationButton = rospy.get_param('stop_navigation_button', 8)
         self.bridge = CvBridge()
         self.netEnable = False
-        rospy.Subscriber("/usb_cam/image_raw_drop", Image, self.image_callback)
+        rospy.Subscriber("/usb_cam/image_raw", Image, self.image_callback)
         rospy.Subscriber("/joy", Joy, self.joy_callback)
         self.joy_pub = rospy.Publisher("/navigation", Joy, queue_size=1)
         rospy.init_node('car_cnn_node', anonymous=True)
@@ -47,7 +47,7 @@ class runCNN(object):
             joy = Joy()
             cv2image = self.bridge.imgmsg_to_cv2(pic)
             cv2image = cv2.resize(cv2image, (200, 150), interpolation=cv2.INTER_CUBIC)
-            cv2image = cv2image[:115, :, :]
+            cv2image = cv2image[50:100, :, :]
             normed_img = cv2image.astype(dtype=np.float32) / 255.0
             # normed_img = np.reshape(normed_img, (115, 200, 1))
             steer = self.model.y_out.eval(session=self.sess, feed_dict={self.model.x: [normed_img],
