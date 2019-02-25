@@ -6,7 +6,7 @@ from __future__ import print_function
 
 import numpy as np
 import tensorflow as tf
-from CnnModel import CnnModel
+from CNN.CnnModel import CnnModel
 
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
