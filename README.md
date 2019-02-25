@@ -5,11 +5,12 @@ This is the 'src' directory of the catkin workspace for the Tju Automated Guided
 *Joystick controlling explanation*  
 
 
-- LT: Enabling motion
-- RT: Disabling motion(for emergency brake)
-- Left stick: Direction and speed controlling
-- A: Starting recording
-- B: Stopping recording
+- LT: Enabling motion  
+- RT: Disabling motion(for emergency brake)  
+- Left stick: Direction and speed controlling  
+- A: Starting recording  
+- B: Stopping recording  
+
 
 - [Environment](#environment)
 	- [Hardware](#hardware)
@@ -25,7 +26,7 @@ This is the 'src' directory of the catkin workspace for the Tju Automated Guided
 
 ### Hardware
 - [Nvidia Jetson TX1 Developer Kit](https://developer.nvidia.com/embedded/buy/jetson-tx1-devkit)
-- [Slamtec RPLIDAR A1](http://www.slamtec.com/en/Lidar/A1)
+- [Slamtec RPLIDAR A3](http://www.slamtec.com/en/Lidar/A3)
 - [Intel Realsense R200](https://software.intel.com/en-us/realsense/previous)
 - [Logitech C925e web camera](https://www.logitech.com/en-us/product/c925e-webcam)
 - [Logitech Gamingpad F710](https://www.logitechg.com/en-us/products/gamepads/f710-wireless-gamepad.html)
@@ -44,7 +45,7 @@ This is the 'src' directory of the catkin workspace for the Tju Automated Guided
 	- [librealsense](https://github.com/jetsonhacks/installLibrealsenseTX1)
 	- [Realsense ROS Package](https://github.com/tevenfeng/installRealSenseROSTX1)
 	- [ROS Driver for V4L USB Cameras](https://github.com/ros-drivers/usb_cam)
-	- Python 3.5.2
+	- Python 2.7.12
 	- [TensorFlow Python3 spec for Jetson TX1](https://github.com/jetsonhacks/installTensorFlowJetsonTX)
 
 - *SPECIAL THANKS to [西安邮电学院XNMS项目组](https://blog.csdn.net/tigerjb) for codes to control MiniBalance 4WD chassis*
@@ -57,12 +58,12 @@ In this part, what we're supposed to do is just flashing the Jetson TX1 with Jet
 ### BUILDING kernel and modules for Jetson TX1
 In this part, we are going to build a custom kernel and some essential modules for our Jetson TX1, in case we're going to use the Intel Realsense R200 and RpLidar A1. In order to do so, we follow instructions provided by [JetsonHacks.com](https://www.jetsonhacks.com/2018/04/21/build-kernel-and-modules-nvidia-jetson-tx1/), and the github repository is [here](https://github.com/jetsonhacks/buildJetsonTX1Kernel). *Great thanks to JetsonHacks.com!*
 
-With this step finished, our kernel shall be ready for the Intel Realsense R200 and RpLidar A1.
+With this step finished, our kernel shall be ready for the Intel Realsense R200 and RpLidar A3.
 
 ### INSTALLING ROS for Jetson TX1
 In this part, we're going to install ROS on our Jetson TX1. With original instructions provided by [JetsonHacks.com](https://github.com/jetsonhacks/installROSTX1) we are able to install ROS outside of China. Due to some well-known reasons, the above instructions are not usable in China. So I change the source mirror of ROS to 'mirror.umd.edu', instructions can be found [here](https://github.com/tevenfeng/installROSTX1).
 
-### INSTALLING driver for sensors(R200, RpLidar A1 and USB camera)
+### INSTALLING driver for sensors(R200, RpLidar A3 and USB camera)
 
 
 ### INSTALLING essential libraries and frameworks
@@ -71,4 +72,4 @@ In this part, we're going to install ROS on our Jetson TX1. With original instru
 - TensorFlow python2.7 spec for Jetson TX1  
 &emsp;&emsp;&emsp;&emsp;
 - OpenCV 3.4, both C++ and python2 binding  
-&emsp;&emsp;&emsp;&emsp;We'd like to use OpenCV3.4 in our codes, so we have to install it first for both C++ and python3. Instructions can be found [here](https://github.com/jetsonhacks/buildOpenCVTX1).  
+&emsp;&emsp;&emsp;&emsp;We'd like to use OpenCV3.4 in our codes, so we have to install it first for both C++ and python2. Instructions can be found [here](https://github.com/jetsonhacks/buildOpenCVTX1).  
