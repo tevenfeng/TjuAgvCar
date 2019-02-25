@@ -1,3 +1,4 @@
 .vscode
 *.pyc
 .DS_Store
+tju_car/nodes/SSD/logs/*
