@@ -47,82 +47,66 @@ num_classes = cfg['num_classes']
 class runSSDMobilenet(object):
 
     def __init__(self):
+        self.bridge = CvBridge()
         self.detection_pub = rospy.Publisher("/object_detection/image/compressed", CompressedImage)
         self.ssd()
 
 
     def ssd(self):                                
         self.download_model()    
-        dg, ci = self.load_frozenmodel()
-        self.detection(dg, ci)
+        self.detection_graph, self.category_index = self.load_frozenmodel()
 
-
-    def detection(self, detection_graph, category_index):
+        # Start detection
         # Session Config: Limit GPU Memory Usage
-        config = tf.ConfigProto()
-        config.gpu_options.allow_growth=allow_memory_growth
+        self.config = tf.ConfigProto()
+        self.config.gpu_options.allow_growth=allow_memory_growth
     
         cur_frames = 0
         # Detection
-        with detection_graph.as_default():
-          with tf.Session(graph=detection_graph, config = config) as sess:
-            # Definite input and output Tensors for detection_graph
-            image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-            # Each box represents a part of the image where a particular object was detected.
-            detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-            # Each score represent how level of confidence for each of the objects.
-            # Score is shown on the result image, together with the class label.
-            detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
-            detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
-            num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-            # fps calculation
-            fps = FPS2(fps_interval).start()
-            # Start Video Stream
-            video_stream = cv2.VideoCapture(video_input)
-            video_stream.open(video_input);
-            print ("Press 'q' to Exit")
-            while True:
-              ret, image_np = video_stream.read()
-              # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-              image_np_expanded = np.expand_dims(image_np, axis=0)
-              # Actual detection.
-              (boxes, scores, classes, num) = sess.run(
-                  [detection_boxes, detection_scores, detection_classes, num_detections],
-                  feed_dict={image_tensor: image_np_expanded})
-              if visualize:
-                  # Visualization of the results of a detection.
-                  vis_util.visualize_boxes_and_labels_on_image_array(
-                  image_np,
-                  np.squeeze(boxes),
-                  np.squeeze(classes).astype(np.int32),
-                  np.squeeze(scores),
-                  category_index,
-                  use_normalized_coordinates=True,
-                  line_thickness=8)
-                  # cv2.imshow('object_detection', image_np)
-                  # Exit Option
-                  # if cv2.waitKey(1) & 0xFF == ord('q'):
-                  #    break
-                  msg = CompressedImage()
-                  msg.header.stamp = rospy.Time.now()
-                  msg.format = "jpeg"
-                  msg.data = np.array(cv2.imencode('.jpeg', image_np)[1]).tostring()
-                  self.detection_pub.publish(msg)
-              else:
-                  cur_frames += 1
-                  for box, score, _class in zip(np.squeeze(boxes), np.squeeze(scores), np.squeeze(classes)):
-                        if cur_frames%det_interval==0 and score > det_th:
-                            label = category_index[_class]['name']
-                            print(label, score, box)
-                  if cur_frames >= max_frames:
-                      break
-              fps.update()
-        # End everything
-        fps.stop()
-        video_stream.release()     
-        cv2.destroyAllWindows()
-        print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
-        print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
+      
+        self.sess = tf.Session(graph=self.detection_graph, config = self.config)
+        # Definite input and output Tensors for detection_graph
+        self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+        # Each box represents a part of the image where a particular object was detected.
+        self.detection_boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+        # Each score represent how level of confidence for each of the objects.
+        # Score is shown on the result image, together with the class label.
+        self.detection_scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+        self.detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+        self.num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
+
+        rospy.Subscriber("/usb_cam/image_detection_drop", Image, self.raw_image_callback)
+
+
+    def raw_image_callback(self, pic):
+        image_np = self.bridge.imgmsg_to_cv2(pic)
+        # Because image_np is read-only, copy it
+        image_copy = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
+        # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+        image_np_expanded = np.expand_dims(image_np, axis=0)
+        # Actual detection.
+        (boxes, scores, classes, num) = self.sess.run(
+            [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
+            feed_dict={self.image_tensor: image_np_expanded})
+        # Visualization of the results of a detection.
+        vis_util.visualize_boxes_and_labels_on_image_array(
+        image_copy,
+        np.squeeze(boxes),
+        np.squeeze(classes).astype(np.int32),
+        np.squeeze(scores),
+        self.category_index,
+        use_normalized_coordinates=True,
+        line_thickness=8)
+        # cv2.imshow('object_detection', image_np)
+        # Exit Option
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #    break
+        msg = CompressedImage()
+        msg.header.stamp = rospy.Time.now()
+        msg.format = "jpeg"
+        msg.data = np.array(cv2.imencode('.jpeg', image_copy)[1]).tostring()
+        self.detection_pub.publish(msg)
+        del image_copy
 
 
     def load_frozenmodel(self):
