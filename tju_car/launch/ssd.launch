@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-
-	<node pkg="tju_car" type="ssd_node.py" name="ssd_node" output="screen">	
-	</node>
-
-</launch>
