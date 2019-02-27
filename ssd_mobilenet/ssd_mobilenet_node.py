@@ -75,7 +75,7 @@ class runSSDMobilenet(object):
         self.detection_classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
         self.num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
-        rospy.Subscriber("/usb_cam/image_detection_drop", Image, self.raw_image_callback)
+        rospy.Subscriber("/usb_cam/image_raw", Image, self.raw_image_callback)
 
 
     def raw_image_callback(self, pic):
