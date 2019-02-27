@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<node pkg="ssd_mobilenet" type="ssd_mobilenet_node.py" name="ssd_mobilenet_node" output="screen">	
+	</node>
+
+</launch>

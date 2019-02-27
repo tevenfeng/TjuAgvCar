@@ -19,7 +19,7 @@ This is the 'src' directory of the catkin workspace for the Tju Automated Guided
 	- [FLASHING Jetson TX1 with Jetpack 3.2 or 3.2.1](#flashing-jetson-tx1-with-jetpack-32-or-321)
 	- [BUILDING kernel and modules for Jetson TX1](#building-kernel-and-modules-for-jetson-tx1)
 	- [INSTALLING ROS for Jetson TX1](#installing-ros-for-jetson-tx1)
-	- [INSTALLING driver for sensors(R200, RpLidar A1 and USB camera)](#installing-driver-for-sensorsr200-rplidar-a1-and-usb-camera)
+	- [INSTALLING driver for sensors(R200, RpLidar A3 and USB camera)](#installing-driver-for-sensorsr200-rplidar-a1-and-usb-camera)
 	- [INSTALLING essential libraries and frameworks](#installing-essential-libraries-and-frameworks)
 
 ## Environment
