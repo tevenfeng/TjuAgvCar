@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<launch>
+	<!-- car steering control with joystick or commands from jetson tx1 -->
+    <node pkg="tju_car" type="tju_car_node" name="tju_car_node" output="screen">
+		<param name="serial_port" type="string" value="/dev/ttyTHS2"/>
+		<!-- set brake button -->
+		<param name="brake_button" type="int" value="7"/>
+		<!-- set start button -->
+		<param name="start_button" type="int" value="6" />
+		<!-- set start recording button -->
+		<param name="start_record_button" type="int" value="1" />
+		<!-- set stop recording button -->
+		<param name="stop_record_button" type="int" value="2" />
+		<!-- set input axis -->
+		<param name="axis_linear" type="int" value="1"/>
+		<param name="axis_angular" type="int" value="0"/>
+		<!-- set start recording rosbag button -->
+		<param name="start_rosbag_button" type="int" value="0" />
+		<!-- set stop recording rosbag button -->
+		<param name="stop_rosbag_button" type="int" value="3" />
+		<!-- set stop navigation button -->
+		<param name="stop_navigation_button" type="int" value="8" />
+		<!-- set start navigation button -->
+		<param name="start_navigation_button" type="int" value="9" />
+		<!-- set max velocity -->
+		<param name="max_linear_vel" type="double" value="40"/>
+		<param name="max_angular_vel" type="double" value="100"/>
+	</node>
+
+    <node respawn="true" pkg="joy" type="joy_node" name="joystick">
+		<param name="autorepeat_rate" value="10"/>
+    </node>
+
+	<node pkg="tju_car" type="rplidar_node" name="rplidar_node">
+	    <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>  
+		<param name="serial_baudrate"     type="int"    value="256000"/><!--A3 -->
+		<param name="frame_id"            type="string" value="laser"/>
+		<param name="inverted"            type="bool"   value="false"/>
+		<param name="angle_compensate"    type="bool"   value="true"/>
+		<param name="scan_mode"           type="string" value="Sensitivity"/>
+	</node>
+	<node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0 0 0 0 0 0 /base_link /laser 100" />
+
+	<node pkg="tju_car" name="usb_cam" type="tju_car_usb_cam_node">
+		<param name="video_device" value="/dev/video0" />
+		<param name="image_width" value="640" />
+		<param name="image_height" value="480" />
+		<param name="framerate" value="30" />
+		<param name="pixel_format" value="yuyv" />
+		<param name="camera_frame_id" value="usb_cam" />
+		<param name="io_method" value="mmap"/>
+	</node>
+
+	<node pkg="topic_tools" type="drop" name="dropRGB4Detection" args= "/usb_cam/image_raw 1 6 /usb_cam/image_detection_drop" />
+
+	<node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car_for_object_detection.rviz" />
+
+</launch>
