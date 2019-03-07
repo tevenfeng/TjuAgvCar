@@ -52,7 +52,7 @@
 		<param name="io_method" value="mmap"/>
 	</node>
 
-	<node pkg="topic_tools" type="drop" name="dropRGB4Detection" args= "/usb_cam/image_raw 1 6 /usb_cam/image_detection_drop" />
+	<node pkg="topic_tools" type="drop" name="dropRGB4Detection" args= "/usb_cam/image_raw 1 10 /usb_cam/image_detection_drop" />
 
 	<node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car_for_object_detection.rviz" />
 

@@ -26,27 +26,29 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 from stuff.helper import FPS2, WebcamVideoStream
 
-## LOAD CONFIG PARAMS ##
-with open("/home/nvidia/AutonomousTju/src/ssd_mobilenet/config_jetson.yml", 'r') as ymlfile:
-    cfg = yaml.load(ymlfile)
-video_input = cfg['video_input']
-visualize = cfg['visualize']
-max_frames = cfg['max_frames']
-width = cfg['width']
-height = cfg['height']
-fps_interval = cfg['fps_interval']
-allow_memory_growth = cfg['allow_memory_growth']
-det_interval = cfg['det_interval']
-det_th = cfg['det_th']
-model_name = cfg['model_name']
-model_path = cfg['model_path']
-label_path = cfg['label_path']
-num_classes = cfg['num_classes']
+
   
 
 class runSSDMobilenet(object):
 
     def __init__(self):
+## LOAD CONFIG PARAMS ##
+        with open("/home/nvidia/AutonomousTju/src/ssd_mobilenet/config_jetson.yml", 'r') as ymlfile:
+            cfg = yaml.load(ymlfile)
+            self.video_input = cfg['video_input']
+            self.visualize = cfg['visualize']
+            self.max_frames = cfg['max_frames']
+            self.width = cfg['width']
+            self.height = cfg['height']
+            self.fps_interval = cfg['fps_interval']
+            self.memory_fraction = cfg['memory_fraction']
+            self.allow_memory_growth = cfg['allow_memory_growth']
+            self.det_interval = cfg['det_interval']
+            self.det_th = cfg['det_th']
+            self.model_name = cfg['model_name']
+            self.model_path = cfg['model_path']
+            self.label_path = cfg['label_path']
+            self.num_classes = cfg['num_classes']
         self.bridge = CvBridge()
         self.detection_pub = rospy.Publisher("/object_detection/image/compressed", CompressedImage)
         self.ssd()
@@ -59,8 +61,9 @@ class runSSDMobilenet(object):
         # Start detection
         # Session Config: Limit GPU Memory Usage
         self.config = tf.ConfigProto()
-        self.config.gpu_options.allow_growth=allow_memory_growth
-    
+        self.config.gpu_options.allow_growth=self.allow_memory_growth
+        self.config.gpu_options.per_process_gpu_memory_fraction=self.memory_fraction
+        print("Memory_fraction: " + str(self.memory_fraction) + "\n")
         cur_frames = 0
         # Detection
       
@@ -76,6 +79,7 @@ class runSSDMobilenet(object):
         self.num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
         rospy.Subscriber("/usb_cam/image_raw", Image, self.raw_image_callback)
+        
 
 
     def raw_image_callback(self, pic):
@@ -114,21 +118,21 @@ class runSSDMobilenet(object):
         detection_graph = tf.Graph()
         with detection_graph.as_default():
           od_graph_def = tf.GraphDef()
-          with tf.gfile.GFile(model_path, 'rb') as fid:
+          with tf.gfile.GFile(self.model_path, 'rb') as fid:
             serialized_graph = fid.read()
             od_graph_def.ParseFromString(serialized_graph)
             tf.import_graph_def(od_graph_def, name='')
         # Loading label map
-        label_map = label_map_util.load_labelmap(label_path)
-        categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=num_classes, use_display_name=True)
+        label_map = label_map_util.load_labelmap(self.label_path)
+        categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=self.num_classes, use_display_name=True)
         category_index = label_map_util.create_category_index(categories)
         return detection_graph, category_index
 
 
     def download_model(self):
-        model_file = model_name + '.tar.gz'
+        model_file = self.model_name + '.tar.gz'
         download_base = 'http://download.tensorflow.org/models/object_detection/'   
-        if not os.path.isfile(model_path):
+        if not os.path.isfile(self.model_path):
             print('Model not found. Downloading it now.')
             opener = urllib.request.URLopener()
             opener.retrieve(download_base + model_file, model_file)

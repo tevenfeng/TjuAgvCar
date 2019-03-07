@@ -6,6 +6,7 @@ max_frames: 500             # only used if visualize==False
 width: 300                  # 300x300 is used by SSD_Mobilenet -> highest fps
 height: 300
 fps_interval: 5             # Intervall [s] to print fps in console
+memory_fraction: 0.3        # per_process_gpu_memory_fraction
 allow_memory_growth: True   # restart python to apply changes on memory usage
 det_interval: 75            # intervall [frames] to print detections to console
 det_th: 0.5                 # detection threshold for det_intervall
