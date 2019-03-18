@@ -46,8 +46,8 @@ class runCNN(object):
         if self.netEnable:
             joy = Joy()
             cv2image = self.bridge.imgmsg_to_cv2(pic)
-            cv2image = cv2.resize(cv2image, (200, 150), interpolation=cv2.INTER_CUBIC)
-            cv2image = cv2image[50:100, :, :]
+            cv2image = cv2.resize(cv2image, (320, 240), interpolation=cv2.INTER_CUBIC)
+            cv2image = cv2image[50:170, :, :]
             normed_img = cv2image.astype(dtype=np.float32) / 255.0
             # normed_img = np.reshape(normed_img, (115, 200, 1))
             steer = self.model.y_out.eval(session=self.sess, feed_dict={self.model.x: [normed_img],

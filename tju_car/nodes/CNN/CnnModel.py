@@ -13,7 +13,7 @@ class CnnModel(object):
     '''Car CNN model'''
 
     def __init__(self):
-        self.x = tf.placeholder(tf.float32, [None, 50, 200, 3])
+        self.x = tf.placeholder(tf.float32, [None, 120, 320, 3])
         self.y_ = tf.placeholder(tf.float32, [None, 1])
 
         (self.h_conv1, _) = conv_layer(self.x, kernel_shape=(5, 5), stride=2, num_of_kernels=24, use_bias=True)
