@@ -23,8 +23,8 @@ def load_dataset(path, percent_testing=None):
             if name == '.DS_Store':
                 continue
             img = cv.imread(os.path.join(root, name))
-            img = cv.resize(img, (200, 150), interpolation=cv.INTER_CUBIC)
-            img = img[:115, :, :]  # ?
+            img = cv.resize(img, (320, 240), interpolation=cv.INTER_CUBIC)
+            img = img[50:170, :, :]  # ?
             x.append(img)
 
 
