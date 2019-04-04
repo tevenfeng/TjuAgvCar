@@ -55,6 +55,8 @@ class runCNN(object):
                                                                         self.model.keep_prob_fc2: 1.0,
                                                                         self.model.keep_prob_fc3: 1.0,
                                                                         self.model.keep_prob_fc4: 1.0})
+            if abs(steer[0][0]) < 0.0001:
+                steer[0][0] = 0
             joy.axes.append(steer[0][0])
             joy.axes.append(1.0)			
             print("steering angle = %s\n" % str(joy.axes[0]))
