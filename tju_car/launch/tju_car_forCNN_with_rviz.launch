@@ -44,6 +44,6 @@
 
     <node pkg="topic_tools" type="drop" name="dropRGB" args= "/usb_cam/image_raw 1 2 /usb_cam/image_raw_drop" />
 
-    <!-- <node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car_forCNN.rviz" /> -->
+    <node pkg="rviz" name="rviz" type="rviz" args="-d $(find tju_car)/rviz/tju_car_forCNN.rviz" />
 
 </launch>
