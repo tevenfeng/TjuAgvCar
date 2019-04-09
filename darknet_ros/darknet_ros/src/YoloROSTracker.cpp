@@ -266,7 +266,7 @@ void YoloROSTracker::publishResult(){
 
     if (current_det_fps >= 0 && current_cap_fps >= 0) {
         std::string fps_str = "FPS detection: " + std::to_string(current_det_fps);
-        putText(cur_frame, fps_str, cv::Point2f(10, 20), cv::FONT_HERSHEY_COMPLEX_SMALL, 1.2, cv::Scalar(50, 255, 0), 2);
+        //putText(cur_frame, fps_str, cv::Point2f(10, 20), cv::FONT_HERSHEY_COMPLEX_SMALL, 1.2, cv::Scalar(50, 255, 0), 2);
     }
     boundingBoxesPublisher.publish(boundingBoxes);
     sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cur_frame).toImageMsg();
