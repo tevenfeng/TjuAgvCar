@@ -2,25 +2,62 @@
 
 This is the 'src' directory of the catkin workspace for the Tju Automated Guided Vehicle(TjuAgvCar).
 
-*Joystick controlling explanation*  
-
-
-- LT: Enabling motion  
-- RT: Disabling motion(for emergency brake)  
-- Left stick: Direction and speed controlling  
-- A: Starting recording  
-- B: Stopping recording  
-
-
+- [Joystick controlling explanation](#joystick-controlling-explanation)
 - [Environment](#environment)
 	- [Hardware](#hardware)
 	- [Software](#software)
 - [Building the vehicle](#building-the-vehicle)
-	- [FLASHING Jetson TX2 with Jetpack 3.2 or 3.2.1](#flashing-jetson-tx1-with-jetpack-32-or-321)
+	- [FLASHING Jetson TX2 with Jetpack 3.2 or 3.2.1](#flashing-jetson-tx2-with-jetpack-32-or-321)
 	- [BUILDING kernel and modules for Jetson TX2](#building-kernel-and-modules-for-jetson-tx2)
 	- [INSTALLING ROS for Jetson TX2](#installing-ros-for-jetson-tx2)
-	- [INSTALLING driver for sensors(R200, RpLidar A3 and USB camera)](#installing-driver-for-sensorsr200-rplidar-a1-and-usb-camera)
+	- [INSTALLING driver for sensors(R200, RpLidar A3 and USB camera)](#installing-driver-for-sensorsr200-rplidar-a3-and-usb-camera)
 	- [INSTALLING essential libraries and frameworks](#installing-essential-libraries-and-frameworks)
+
+
+## Joystick controlling explanation
+
+<table border="8">
+	<tr>
+		<th>Button</th>
+		<th>Function</th>
+		<th>Note</th>
+	</tr>
+	<tr>
+		<th>LT</th>
+		<th>Enabling motion</th>
+		<th>Emergency mode, cannot move anymore</th>
+	</tr>
+	<tr>
+		<th>RT</th>
+		<th>Disabling motion</th>
+		<th>Disable emergency mode, can controlled by joystick or Auto-Navi mode</th>
+	</tr>
+	<tr>
+		<th>Left joystick</th>
+		<th>Controlling speed and direction</th>
+		<th>With stick up and down to controll speed, stick left or right to turn left or right</th>
+	</tr>
+	<tr>
+		<th>A</th>
+		<th>Starting data recorder</th>
+		<th>Start to record data, including camera images, lidar images, etc.</th>
+	</tr>
+	<tr>
+		<th>B</th>
+		<th>Stopping data recorder</th>
+		<th>Stop recording data</th>
+	</tr>
+	<tr>
+		<th>Start</th>
+		<th>Starting Auto-Navi Mode</th>
+		<th>Let the car go where it want to go!</th>
+	</tr>
+	<tr>
+		<th>Back</th>
+		<th>Stopping Auto-Navi Mode</th>
+		<th>Controlled by you!</th>
+	</tr>
+</table>
 
 ## Environment
 
