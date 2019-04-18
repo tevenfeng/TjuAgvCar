@@ -17,10 +17,6 @@ from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 
-"""
-This node restores a saved TF model that was trained on a host computer
-"""
-
 
 class runCNN(object):
 
@@ -38,7 +34,7 @@ class runCNN(object):
         rospy.Subscriber("/usb_cam/image_raw", Image, self.image_callback)
         rospy.Subscriber("/joy", Joy, self.joy_callback)
         self.joy_pub = rospy.Publisher("/navigation", Joy, queue_size=1)
-        self.img_pub = rospy.Publisher("/feature_map", Image, queue_size=10)
+        # self.img_pub = rospy.Publisher("/feature_map", Image, queue_size=10)
         rospy.init_node('car_cnn_node', anonymous=True)
         rospy.spin()
 
@@ -49,13 +45,13 @@ class runCNN(object):
             cv2image = cv2.resize(cv2image, (320, 240), interpolation=cv2.INTER_CUBIC)
             cv2image = cv2image[50:170, :, :]
             normed_img = cv2image.astype(dtype=np.float32) / 255.0
-            # normed_img = np.reshape(normed_img, (115, 200, 1))
             steer = self.model.y_out.eval(session=self.sess, feed_dict={self.model.x: [normed_img],
                                                                         self.model.keep_prob_fc1: 1.0,
                                                                         self.model.keep_prob_fc2: 1.0,
                                                                         self.model.keep_prob_fc3: 1.0,
                                                                         self.model.keep_prob_fc4: 1.0})
 
+            #Get feature maps and publish them for rviz
             #x = self.model.h_conv5.eval(session=self.sess, feed_dict={self.model.x: [normed_img],
             #                                                            self.model.keep_prob_fc1: 1.0,
             #                                                            self.model.keep_prob_fc2: 1.0,
@@ -88,23 +84,6 @@ class runCNN(object):
         if stop_navigation_button_value and self.netEnable:
             self.netEnable = False
             print('Neural Network Disabled!\n')
-
-
-    def concat_features(self, conv_output):
-        num_or_size_splits = conv_output.get_shape().as_list()[-1]
-        each_convs = tf.split(conv_output, num_or_size_splits=num_or_size_splits, axis=3)
-        concact_size = int(math.sqrt(num_or_size_splits) / 1)
-        all_concact = None
-        for i in range(concact_size):
-            row_concact = each_convs[i * concact_size]
-            for j in range(concact_size - 1):
-                row_concact = tf.concat([row_concact, each_convs[i * concact_size + j + 1]], 1)
-            if i == 0:
-                all_concact = row_concact
-            else:
-                all_concact = tf.concat([all_concact, row_concact], 2)
-
-        return all_concact
 
 
 if __name__ == '__main__':
