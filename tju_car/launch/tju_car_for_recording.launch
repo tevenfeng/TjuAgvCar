@@ -32,14 +32,16 @@
 		<param name="autorepeat_rate" value="10"/>
     </node>
 
+    <!--
 	<node pkg="tju_car" type="rplidar_node" name="rplidar_node">
   		<param name="serial_port"         type="string" value="/dev/rplidar"/>  
-	    <param name="serial_baudrate"     type="int"    value="256000"/><!--A3 -->
+	    <param name="serial_baudrate"     type="int"    value="256000"/>
 	    <param name="frame_id"            type="string" value="laser"/>
 	    <param name="inverted"            type="bool"   value="false"/>
 	    <param name="angle_compensate"    type="bool"   value="true"/>
 	    <param name="scan_mode"           type="string" value="Sensitivity"/>
 	</node>
+    -->
 
 	<node pkg="tju_car" name="usb_cam" type="tju_car_usb_cam_node">
 		<param name="video_device" value="/dev/usb_cam" />
@@ -51,6 +53,9 @@
 		<param name="io_method" value="mmap"/>
 	</node>
 
+    <include file="$(find realsense_camera)/launch/r200_nodelet_rgbd.launch" />
+
     <node pkg="topic_tools" type="drop" name="dropRGB" args= "/usb_cam/image_raw 1 2 /usb_cam/image_raw_drop" />
+	<node pkg="topic_tools" type="drop" name="dropIr" args="/camera/ir/image_raw 1 2 /camera/ir/image_raw_drop" />
 
 </launch>
